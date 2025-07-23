@@ -1,7 +1,7 @@
 {
   "name": "loopr",
   "version": "1.0.0",
-  "description": "",
+  "description": "Un motor de calendario ligero y extensible, construido con Preact, que permite renderizar vistas y eventos de forma dinámica.",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.esm.js",
   "files": [
@@ -19,8 +19,17 @@
     "type": "git",
     "url": "git+https://github.com/bert0h-dev/Loopr.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "calendar",
+    "preact",
+    "lightweight",
+    "component",
+    "ui",
+    "events",
+    "views",
+    "dynamic"
+  ],
+  "author": "Bert0h-dev (humberto.morales.14@hotmail.com)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/bert0h-dev/Loopr/issues"
@@ -36,7 +45,6 @@
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
