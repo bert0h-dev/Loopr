@@ -1,5 +1,6 @@
-const appInit = document.getElementById('app-init');
-appInit.innerHTML = `
-  <h1>Welcome to Loopr</h1>
-  <p>This is a simple Preact application using Rollup.</p>
-`; 
+import { h, render } from 'preact';
+import { CalendarApp } from './CalendarApp.jsx';
+
+const appElement = document.getElementById('app-init');
+
+render(<CalendarApp />, appElement);
