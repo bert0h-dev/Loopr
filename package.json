@@ -1,0 +1,40 @@
+{
+  "name": "loopr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bert0h-dev/Loopr.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bert0h-dev/Loopr/issues"
+  },
+  "homepage": "https://github.com/bert0h-dev/Loopr#readme",
+  "dependencies": {
+    "preact": "^10.26.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "eslint": "^9.31.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.6.2",
+    "rollup": "^4.45.1",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-serve": "^3.0.0"
+  }
+}
