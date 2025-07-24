@@ -1,12 +1,26 @@
 import { h } from 'preact';
+import { CalendarHeader } from '@/components/common/CalendarHeader.jsx';
+import { MonthView } from '@/components/viewMonth/MonthView.jsx';
+import { useCalendarController } from '@/hooks/useCalendarController';
 
-const CalendarApp = () => {
+/**
+ * @name CalendarApp
+ * @summary
+ * Componente principal de la aplicación de calendario
+ * Maneja el estado global del calendario y coordina los componentes hijos
+ *
+ * @returns {JSX.Element} Elemento JSX que representa la aplicación completa del calendario
+ */
+export const CalendarApp = () => {
+  const [currentDate, calendarController] = useCalendarController();
+
   return (
-    <div>
-      <h1>Calendar App demo</h1>
-      <p>This is a simple calendar application built with Preact.</p>
+    <div className='calendar-container'>
+      <CalendarHeader
+        currentDate={currentDate}
+        controller={calendarController}
+      />
+      <MonthView date={currentDate} />
     </div>
   );
 };
-
-export { CalendarApp };

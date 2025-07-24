@@ -1,3 +1,5 @@
+import '@/css/index.css';
+
 import { h, render } from 'preact';
 import { CalendarApp } from './CalendarApp.jsx';
 
