@@ -31,10 +31,81 @@ jobs:
       # 2. La acción principal que genera el changelog y crea un Release
       - name: Generate Changelog
         id: gitmoji-changelog
-        uses: fr-str/gitmoji-changelog-action@v2.0
+        uses: mikepenz/release-changelog-builder-action@v4
         with:
-          # Formato de salida: puede ser 'md' (Markdown) o 'json'
-          format: md
+          # Token de GitHub necesario para leer commits
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Configuración para reconocer gitmojis
+          configuration: |
+            {
+              "categories": [
+                {
+                  "title": "## ✨ Features",
+                  "labels": [],
+                  "rules": [{"pattern": "^(✨|:sparkles:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🐛 Bug Fixes", 
+                  "labels": [],
+                  "rules": [{"pattern": "^(🐛|:bug:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 💄 UI/UX",
+                  "labels": [],
+                  "rules": [{"pattern": "^(💄|:lipstick:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## ⚡ Performance",
+                  "labels": [],
+                  "rules": [{"pattern": "^(⚡|:zap:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 📝 Documentation",
+                  "labels": [],
+                  "rules": [{"pattern": "^(📝|:memo:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🔧 Configuration",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🔧|:wrench:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🎨 Code Style",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🎨|:art:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🌐 Internationalization",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🌐|:globe_with_meridians:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 📱 Responsive",
+                  "labels": [],
+                  "rules": [{"pattern": "^(📱|:iphone:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🎉 Initial",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🎉|:tada:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🧪 Testing",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🧪|:test_tube:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🔒 Security",
+                  "labels": [],
+                  "rules": [{"pattern": "^(🔒|:lock:).*", "flags": ["dotAll"]}]
+                },
+                {
+                  "title": "## 🚀 Other Changes",
+                  "labels": [],
+                  "rules": [{"pattern": ".*", "flags": ["dotAll"]}]
+                }
+              ]
+            }
 
       # 3. Crea un GitHub Release con el changelog generado
       - name: Create a GitHub Release
