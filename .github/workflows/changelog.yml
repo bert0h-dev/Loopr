@@ -1,0 +1,56 @@
+# Nombre del workflow que aparecerá en la pestaña "Actions" de GitHub
+name: 'Generate Changelog'
+
+# Activador: ¿Cuándo debe ejecutarse este workflow?
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Se activa al empujar cualquier tag que empiece con "v", como v1.0.0
+
+# Permisos del Job
+permissions:
+  contents: write # Permite a la acción escribir en el repositorio (para crear el release)
+  pull-requests: read # Permite leer los pull requests asociados
+
+# Trabajos a realizar
+jobs:
+  # Nombre del trabajo
+  update_changelog:
+    # Máquina virtual donde se ejecutará
+    runs-on: ubuntu-latest
+
+    # Pasos que ejecutará el trabajo
+    steps:
+      # 1. Clona tu repositorio para que el workflow tenga acceso al código
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Necesitamos el historial completo para comparar todos los commits
+          fetch-depth: 0
+
+      # 2. La acción principal que genera el changelog y crea un Release
+      - name: Generate Changelog
+        id: gitmoji-changelog
+        uses: fr-str/gitmoji-changelog-action@v2.0
+        with:
+          # Formato de salida: puede ser 'md' (Markdown) o 'json'
+          format: md
+
+      # 3. Crea un GitHub Release con el changelog generado
+      - name: Create a GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          # El nombre del Release (será el mismo que el tag)
+          name: Release ${{ github.ref_name }}
+
+          # El contenido del Release será el changelog del paso anterior
+          body: ${{ steps.gitmoji-changelog.outputs.changelog }}
+
+          # El tag se toma automáticamente del evento que disparó el workflow
+          tag_name: ${{ github.ref_name }}
+
+          # Hacer el release como draft si se desea revisión manual (opcional)
+          # draft: false
+        env:
+          # Token de autenticación de GitHub (provisto automáticamente)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
