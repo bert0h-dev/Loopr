@@ -15,12 +15,14 @@ export const CalendarApp = () => {
   const [currentDate, calendarController] = useCalendarController();
 
   return (
-    <div className='calendar-container'>
-      <CalendarHeader
-        currentDate={currentDate}
-        controller={calendarController}
-      />
-      <MonthView date={currentDate} />
+    <div className='container mt-4'>
+      <div className='calendar'>
+        <CalendarHeader
+          currentDate={currentDate}
+          controller={calendarController}
+        />
+        <MonthView date={currentDate} />
+      </div>
     </div>
   );
 };
