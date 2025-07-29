@@ -27,8 +27,15 @@ export const MonthView = ({ date }) => {
 
   return (
     <div className='month-view'>
-      <MonthDaysHeader weekDay={config.firstDayOfWeek} />
-      <MonthDays monthCalendarDays={monthCalendarDays} />
+      <MonthDaysHeader
+        weekDay={config.firstDayOfWeek}
+        showWeekNumbers={config.showWeekNumbers}
+      />
+      <MonthDays
+        monthCalendarDays={monthCalendarDays}
+        showWeekNumbers={config.showWeekNumbers}
+        weekDay={config.firstDayOfWeek}
+      />
     </div>
   );
 };

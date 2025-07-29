@@ -7,10 +7,10 @@ export const initialConfig = {
   // Configuración del calendario
   config: {
     locale: 'es-MX',
-    firstDayOfWeek: 0, // 0 = Domingo, 1 = Lunes
-    timeFormat: '24h', // '12h' | '24h'
+    firstDayOfWeek: 0,
+    timeFormat: '24h',
     dateFormat: 'DD/MM/YYYY',
-    theme: 'light', // 'light' | 'dark' | 'auto'
+    theme: 'light',
     weekendsVisible: true,
     showWeekNumbers: false,
     viewToolbar: {
@@ -19,6 +19,7 @@ export const initialConfig = {
         { action: 'month' },
         { action: 'week' },
         { action: 'day' },
+        { action: 'agenda' },
       ],
       center: [{ action: 'title' }],
       end: [
@@ -34,7 +35,7 @@ export const initialConfig = {
   },
 
   // Vista activa
-  activeView: 'month', // 'month' | 'week' | 'day' | 'year'
+  activeView: 'month',
 
   // Eventos del calendario
   events: [],

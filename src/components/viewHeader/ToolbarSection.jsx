@@ -30,7 +30,6 @@ export const ToolbarSection = ({ section }) => {
   let formattedConfig = config.viewFormats[activeView] || {
     month: 'long',
   };
-  console.log(config);
 
   // Suscribirse a eventos específicos del calendario
   useEffect(() => {
@@ -143,7 +142,8 @@ export const ToolbarSection = ({ section }) => {
         let { buttonClick, buttonTitle, buttonClass, buttonText } =
           ToolbarOptions[action] || {};
         let buttonClasses = [
-          'btn',
+          'button',
+          'is-primary',
           buttonClass || '',
           isAnimating ? 'is-loading' : '',
         ];

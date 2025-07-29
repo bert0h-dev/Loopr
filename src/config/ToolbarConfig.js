@@ -7,22 +7,22 @@ export const ToolbarOptions = {
   prevYear: {
     buttonClick: 'prevYear',
     buttonTitle: 'Año anterior',
-    buttonClass: 'is-rounded icon fas fa-angles-left',
+    buttonClass: 'is-rounded-full icon fas fa-angles-left',
   },
   nextYear: {
     buttonClick: 'nextYear',
     buttonTitle: 'Año siguiente',
-    buttonClass: 'is-rounded icon fas fa-angles-right',
+    buttonClass: 'is-rounded-full icon fas fa-angles-right',
   },
   prev: {
     buttonClick: 'prev',
     buttonTitle: 'Mes anterior',
-    buttonClass: 'is-rounded icon fas fa-angle-left',
+    buttonClass: 'is-rounded-full icon fas fa-angle-left',
   },
   next: {
     buttonClick: 'next',
     buttonTitle: 'Mes siguiente',
-    buttonClass: 'is-rounded icon fas fa-angle-right',
+    buttonClass: 'is-rounded-full icon fas fa-angle-right',
   },
   today: {
     buttonClick: 'today',

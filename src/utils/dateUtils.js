@@ -1,6 +1,63 @@
 import { useMemo } from 'preact/hooks';
 
 /**
+ * @name getWeekNumber
+ * @summary
+ * Calcula el número de semana del año para una fecha dada
+ * Usa el estándar ISO 8601 donde la semana 1 es la primera semana que contiene el 4 de enero
+ *
+ * @param {Date} date - Fecha para calcular el número de semana
+ * @returns {number} Número de semana del año (1-53)
+ *
+ * @example
+ * const weekNumber = getWeekNumber(new Date(2025, 0, 15)); // 15 de enero 2025
+ * console.log(weekNumber); // 3
+ */
+export function getWeekNumber(date) {
+  // Crear una copia de la fecha para no modificar la original
+  const targetDate = new Date(date.getTime());
+
+  // Ajustar para el jueves de la misma semana (ISO 8601)
+  targetDate.setDate(targetDate.getDate() + 4 - (targetDate.getDay() || 7));
+
+  // Obtener el primer día del año
+  const yearStart = new Date(targetDate.getFullYear(), 0, 1);
+
+  // Calcular el número de semana
+  const weekNumber = Math.ceil(((targetDate - yearStart) / 86400000 + 1) / 7);
+
+  return weekNumber;
+}
+
+/**
+ * @name getWeekNumbers
+ * @summary
+ * Obtiene los números de semana para un array de días del calendario
+ *
+ * @param {Array<Object>} monthCalendarDays - Array de días del calendario
+ * @param {number} weekDay - Primer día de la semana (0=Domingo, 1=Lunes)
+ * @returns {Array<number>} Array con los números de semana únicos
+ *
+ * @example
+ * const weekNumbers = getWeekNumbers(monthDays, 1);
+ * console.log(weekNumbers); // [4, 5, 6, 7, 8]
+ */
+export function getWeekNumbers(monthCalendarDays, weekDay = 0) {
+  const weekNumbers = [];
+
+  // Agrupar los días por semanas (cada 7 días)
+  for (let i = 0; i < monthCalendarDays.length; i += 7) {
+    const firstDayOfWeek = monthCalendarDays[i];
+    if (firstDayOfWeek) {
+      const weekNumber = getWeekNumber(firstDayOfWeek.date);
+      weekNumbers.push(weekNumber);
+    }
+  }
+
+  return weekNumbers;
+}
+
+/**
  * Utilidades para manejo de fechas en el calendario
  * @module dateUtils
  */
@@ -59,10 +116,11 @@ export function getWeekDays(weekDay = 0, locale = 'es-MX') {
 
       dias.push({
         index: diaIndex,
-        nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1),
-        abreviatura: abreviatura.charAt(0).toUpperCase() + abreviatura.slice(1),
+        name: nombre.charAt(0).toUpperCase() + nombre.slice(1),
+        abbreviation:
+          abreviatura.charAt(0).toUpperCase() + abreviatura.slice(1),
         narrow: narrow.charAt(0).toUpperCase() + narrow.slice(1),
-        esFinDeSemana: diaIndex === 0 || diaIndex === 6,
+        isWeekend: diaIndex === 0 || diaIndex === 6,
       });
     }
 
