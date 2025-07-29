@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { getWeekDays } from '@/utils/dateUtils';
+import { getWeekDays } from '@/utils/dateUtils.js';
 
 /**
  * @name WeekDaysHeader

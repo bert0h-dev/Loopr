@@ -1,8 +1,8 @@
 import '@/css/index.css';
 
 import { h, render } from 'preact';
-import { CalendarApp } from './CalendarApp.jsx';
+import { App } from './App.jsx';
 
 const appElement = document.getElementById('app-init');
 
-render(<CalendarApp />, appElement);
+render(<App />, appElement);

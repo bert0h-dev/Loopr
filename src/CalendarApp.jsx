@@ -1,7 +1,6 @@
 import { h } from 'preact';
-import { CalendarHeader } from '@/components/common/CalendarHeader.jsx';
-import { MonthView } from '@/components/viewMonth/MonthView.jsx';
-import { useCalendarController } from '@/hooks/useCalendarController';
+import { CalendarContent } from '@/CalendarContent.jsx';
+import { CalendarProvider } from '@/context/CalendarContext.jsx';
 
 /**
  * @name CalendarApp
@@ -11,18 +10,10 @@ import { useCalendarController } from '@/hooks/useCalendarController';
  *
  * @returns {JSX.Element} Elemento JSX que representa la aplicación completa del calendario
  */
-export const CalendarApp = () => {
-  const [currentDate, calendarController] = useCalendarController();
-
+export const CalendarApp = ({ config = {}, events = [] }) => {
   return (
-    <div className='container mt-4'>
-      <div className='calendar'>
-        <CalendarHeader
-          currentDate={currentDate}
-          controller={calendarController}
-        />
-        <MonthView date={currentDate} />
-      </div>
-    </div>
+    <CalendarProvider initialConfig={config} initialEvents={events}>
+      <CalendarContent />
+    </CalendarProvider>
   );
 };

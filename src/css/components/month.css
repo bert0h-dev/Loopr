@@ -1,85 +1,326 @@
+/* ========================================
+   MODERN MONTH VIEW
+   ======================================== */
+
 .month-view {
-  border: 1px solid #e0e0e0;
-  border-top: none;
+  background: white;
+  overflow: hidden;
+
+  animation: monthViewSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+@keyframes monthViewSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   WEEK DAYS HEADER
+   ======================================== */
 
 .month-week-days-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background-color: #f5f5f5;
-  font-weight: bold;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--primary-border);
+  position: relative;
+}
+
+.month-week-days-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
 }
 
 .month-week-day-name {
   text-align: center;
-  padding: 8px 4px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
+  padding: var(--space-lg) var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   cursor: default;
   user-select: none;
-  transition: opacity 0.2s ease;
-}
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
 
-.month-week-day-name:hover {
-  opacity: 0.9;
+  /* Subtle hover effect */
+  transition: all var(--transition-fast);
 }
 
 .month-week-day-name.weekend {
-  color: #dc2626;
+  color: var(--error);
+  font-weight: var(--font-weight-bold);
 }
+
+.month-week-day-name::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  transition: all var(--transition-fast);
+  transform: translateX(-50%);
+}
+
+.month-week-day-name:hover::after {
+  width: 60%;
+}
+
+/* ========================================
+   MONTH DAYS GRID
+   ======================================== */
 
 .month-days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  background: var(--bg-secondary);
   gap: 1px;
 }
 
 .month-day-cell {
-  height: 100px;
-  border-bottom: 1px solid #e5e7eb;
-  border-left: 1px solid #e5e7eb;
-  cursor: default;
-  font-weight: 500;
-  padding: 4px;
-  padding-top: 24px;
-  transition: background-color 0.2s;
+  height: 120px;
+  background: var(--bg-secondary);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-md);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-fast);
+
+  /* Modern cell design */
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.month-day-cell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
 }
 
 .month-day-cell:hover {
-  background-color: #f3f4f6;
-  font-weight: 600;
-  cursor: pointer;
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--bg-primary);
+  z-index: 2;
 }
 
+.month-day-cell:hover::before {
+  opacity: 0.05;
+}
+
+.month-day-cell:active {
+  transform: translateY(0);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--bg-primary);
+}
+
+/* ========================================
+   DAY NUMBER STYLING
+   ======================================== */
+
 .month-day-number {
+  cursor: pointer;
+  user-select: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  z-index: 1;
+  position: relative;
   cursor: default;
   user-select: none;
   font-size: 0.875rem;
+
+  /* Circular background for day numbers */
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
 }
 
-.month-day-cell.weekend {
-  color: #dc2626;
+.month-day-cell:hover .month-day-number {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* ========================================
+   SPECIAL DAY STATES
+   ======================================== */
+
+.month-day-cell.weekend .month-day-number {
+  color: var(--error);
+  font-weight: var(--font-weight-bold);
+}
+
+.month-day-cell.weekend:hover {
+  box-shadow:
+    0 8px 25px var(--error-secondary),
+    0 0 0 1px var(--error-secondary);
 }
 
 .month-day-cell.today {
-  background-color: #e8f0fe;
-  border: 1px solid #1a73e8;
-  font-weight: bold;
+  background: linear-gradient(
+    135deg,
+    var(--bg-button-primary) 0%,
+    var(--bg-button-primary-active) 100%
+  );
+  border: 2px solid var(--primary-400);
+  box-shadow:
+    0 0 0 3px var(--bg-button-primary-shadow),
+    var(--shadow-md);
+}
+
+.month-day-cell.today .month-day-number {
+  background: var(--success);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-sm);
+
+  /* Pulsing animation */
+  animation: todayPulse 2s infinite;
+}
+
+@keyframes todayPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 8px rgba(14, 165, 233, 0);
+  }
 }
 
 .month-day-cell.today:hover {
-  color: #9ca3af;
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 30px var(--bg-button-primary-active),
+    0 0 0 3px var(--bg-button-primary-shadow);
+}
+
+.month-day-cell.today:hover .month-day-number {
+  background: var(--text-secondary);
+  color: var(--text-primary);
+  transform: scale(1.15);
 }
 
 .month-day-cell.outside-month {
-  color: #9ca3af;
-  background-color: #fdfdfd;
+  background: var(--bg-primary);
+  opacity: 0.6;
+}
+
+.month-day-cell.outside-month .month-day-number {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-normal);
 }
 
 .month-day-cell.outside-month:hover {
   background-color: unset;
-  font-weight: 500;
+  transform: none;
+  box-shadow: none;
   cursor: default;
+}
+
+.month-day-cell.outside-month:hover .month-day-number {
+  background: none;
+  color: var(--text-secondary);
+  transform: none;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .month-day-cell {
+    height: 100px;
+    padding: var(--space-sm);
+  }
+
+  .month-day-number {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .month-week-day-name {
+    padding: var(--space-md) var(--space-xs);
+    font-size: var(--font-size-xs);
+  }
+
+  .month-day-cell {
+    height: 80px;
+    padding: var(--space-xs);
+  }
+
+  .month-day-number {
+    width: 24px;
+    height: 24px;
+    font-size: var(--font-size-xs);
+  }
+
+  .month-day-cell:hover {
+    transform: none;
+    box-shadow: 0 0 0 1px var(--bg-primary);
+  }
+}
+
+@media (max-width: 480px) {
+  .month-day-cell {
+    height: 60px;
+  }
+
+  .month-day-number {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+
+  .month-week-day-name {
+    font-size: 10px;
+    padding: var(--space-sm) 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .month-day-cell,
+  .month-day-number,
+  .month-week-day-name {
+    transition: none;
+  }
+
+  .month-day-cell.today .month-day-number {
+    animation: none;
+  }
+
+  .month-view {
+    animation: none;
+  }
 }

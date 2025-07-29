@@ -73,15 +73,53 @@ import { useEffect, useRef, useState } from 'preact/hooks';
  * controller.incrementDate(1, 'years'); // Avanzar un año
  */
 export function useCalendarController(defaultDate = new Date()) {
-  const [currentDate, setCurrentDate] = useState(defaultDate);
+  // Validar y sanitizar defaultDate
+  const validateDate = date => {
+    if (!date) return new Date();
+    if (!(date instanceof Date)) {
+      try {
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+          console.warn(
+            'useCalendarController: defaultDate inválida, usando fecha actual'
+          );
+          return new Date();
+        }
+        return parsedDate;
+      } catch (error) {
+        console.warn(
+          'useCalendarController: Error al parsear defaultDate, usando fecha actual',
+          error
+        );
+        return new Date();
+      }
+    }
+    if (isNaN(date.getTime())) {
+      console.warn(
+        'useCalendarController: defaultDate inválida, usando fecha actual'
+      );
+      return new Date();
+    }
+    return date;
+  };
+
+  const [currentDate, setCurrentDate] = useState(() =>
+    validateDate(defaultDate)
+  );
   const subscribers = useRef(new Map()); // Map para diferentes tipos de eventos
   const prevDate = useRef(null); // Mover fuera del useEffect
 
-  // Función helper para emitir eventos
+  // Función helper para emitir eventos con manejo de errores
   const emit = (eventType, data) => {
     const eventSubscribers = subscribers.current.get(eventType);
     if (eventSubscribers) {
-      eventSubscribers.forEach(callback => callback(data));
+      eventSubscribers.forEach(callback => {
+        try {
+          callback(data);
+        } catch (error) {
+          console.error(`Error en callback del evento '${eventType}':`, error);
+        }
+      });
     }
   };
 
@@ -123,72 +161,138 @@ export function useCalendarController(defaultDate = new Date()) {
   const controller = useRef({
     getDate: () => currentDate,
     setDate: date => {
-      const prevDate = currentDate;
-      setCurrentDate(date);
-      emit('dateSet', { current: date, previous: prevDate });
+      try {
+        const validatedDate = validateDate(date);
+        const prevDate = currentDate;
+        setCurrentDate(validatedDate);
+        emit('dateSet', { current: validatedDate, previous: prevDate });
+      } catch (error) {
+        console.error('Error en setDate:', error);
+      }
     },
     nextMonth: () => {
-      setCurrentDate(prev => {
-        const newDate = new Date(prev);
-        newDate.setMonth(newDate.getMonth() + 1);
-        emit('nextMonth', { current: newDate, previous: prev });
-        return newDate;
-      });
+      try {
+        setCurrentDate(prev => {
+          const newDate = new Date(prev);
+          newDate.setMonth(newDate.getMonth() + 1);
+
+          // Validar que la nueva fecha sea válida
+          if (isNaN(newDate.getTime())) {
+            console.error('Error: fecha inválida generada en nextMonth');
+            return prev; // Retornar fecha anterior si hay error
+          }
+
+          emit('nextMonth', { current: newDate, previous: prev });
+          return newDate;
+        });
+      } catch (error) {
+        console.error('Error en nextMonth:', error);
+      }
     },
     prevMonth: () => {
-      setCurrentDate(prev => {
-        const newDate = new Date(prev);
-        newDate.setMonth(newDate.getMonth() - 1);
-        emit('prevMonth', { current: newDate, previous: prev });
-        return newDate;
-      });
+      try {
+        setCurrentDate(prev => {
+          const newDate = new Date(prev);
+          newDate.setMonth(newDate.getMonth() - 1);
+
+          // Validar que la nueva fecha sea válida
+          if (isNaN(newDate.getTime())) {
+            console.error('Error: fecha inválida generada en prevMonth');
+            return prev; // Retornar fecha anterior si hay error
+          }
+
+          emit('prevMonth', { current: newDate, previous: prev });
+          return newDate;
+        });
+      } catch (error) {
+        console.error('Error en prevMonth:', error);
+      }
     },
     nextYear: () => {
-      setCurrentDate(prev => {
-        const newDate = new Date(prev);
-        newDate.setFullYear(newDate.getFullYear() + 1);
-        emit('nextYear', { current: newDate, previous: prev });
-        return newDate;
-      });
+      try {
+        setCurrentDate(prev => {
+          const newDate = new Date(prev);
+          newDate.setFullYear(newDate.getFullYear() + 1);
+
+          // Validar que la nueva fecha sea válida
+          if (isNaN(newDate.getTime())) {
+            console.error('Error: fecha inválida generada en nextYear');
+            return prev; // Retornar fecha anterior si hay error
+          }
+
+          emit('nextYear', { current: newDate, previous: prev });
+          return newDate;
+        });
+      } catch (error) {
+        console.error('Error en nextYear:', error);
+      }
     },
     prevYear: () => {
-      setCurrentDate(prev => {
-        const newDate = new Date(prev);
-        newDate.setFullYear(newDate.getFullYear() - 1);
-        emit('prevYear', { current: newDate, previous: prev });
-        return newDate;
-      });
+      try {
+        setCurrentDate(prev => {
+          const newDate = new Date(prev);
+          newDate.setFullYear(newDate.getFullYear() - 1);
+
+          // Validar que la nueva fecha sea válida
+          if (isNaN(newDate.getTime())) {
+            console.error('Error: fecha inválida generada en prevYear');
+            return prev; // Retornar fecha anterior si hay error
+          }
+
+          emit('prevYear', { current: newDate, previous: prev });
+          return newDate;
+        });
+      } catch (error) {
+        console.error('Error en prevYear:', error);
+      }
     },
     goToToday: () => {
-      const prevDate = currentDate;
-      const today = new Date();
-      setCurrentDate(today);
-      emit('goToToday', { current: today, previous: prevDate });
+      try {
+        const prevDate = currentDate;
+        const today = new Date();
+
+        // Validar que la fecha de hoy sea válida (por si acaso)
+        if (isNaN(today.getTime())) {
+          console.error('Error: no se pudo obtener la fecha actual');
+          return;
+        }
+
+        setCurrentDate(today);
+        emit('goToToday', { current: today, previous: prevDate });
+      } catch (error) {
+        console.error('Error en goToToday:', error);
+      }
     },
     gotoDate: targetDate => {
-      const prevDate = currentDate;
+      try {
+        const prevDate = currentDate;
 
-      // Convertir el input a Date válido
-      let newDate;
-      if (targetDate instanceof Date) {
-        newDate = new Date(targetDate);
-      } else {
-        // Intentar parsear string u otros formatos
-        newDate = new Date(targetDate);
+        // Usar la función validateDate para consistencia
+        const newDate = validateDate(targetDate);
+
+        // Si validateDate retorna una fecha diferente a la esperada, loggear warning
+        if (
+          targetDate !== newDate &&
+          !(
+            targetDate instanceof Date &&
+            targetDate.getTime() === newDate.getTime()
+          )
+        ) {
+          console.warn('gotoDate: Fecha proporcionada fue corregida:', {
+            original: targetDate,
+            corregida: newDate,
+          });
+        }
+
+        setCurrentDate(newDate);
+        emit('gotoDate', {
+          current: newDate,
+          previous: prevDate,
+          targetInput: targetDate, // Info adicional para debugging
+        });
+      } catch (error) {
+        console.error('Error en gotoDate:', error);
       }
-
-      // Validación: asegurar que la fecha es válida
-      if (isNaN(newDate.getTime())) {
-        console.warn('gotoDate: Fecha inválida proporcionada:', targetDate);
-        return; // No cambiar si la fecha es inválida
-      }
-
-      setCurrentDate(newDate);
-      emit('gotoDate', {
-        current: newDate,
-        previous: prevDate,
-        targetInput: targetDate, // Info adicional para debugging
-      });
     },
     incrementDate: (amount, unit = 'days') => {
       // Validación de parámetros
@@ -238,21 +342,41 @@ export function useCalendarController(defaultDate = new Date()) {
     },
     // Sistema de suscripción mejorado
     on: (eventType, callback) => {
-      if (!subscribers.current.has(eventType)) {
-        subscribers.current.set(eventType, new Set());
-      }
-      subscribers.current.get(eventType).add(callback);
-
-      // Retornar función para desuscribirse
-      return () => {
-        const eventSubscribers = subscribers.current.get(eventType);
-        if (eventSubscribers) {
-          eventSubscribers.delete(callback);
-          if (eventSubscribers.size === 0) {
-            subscribers.current.delete(eventType);
-          }
+      try {
+        // Validar parámetros
+        if (typeof eventType !== 'string' || !eventType.trim()) {
+          console.error('on: eventType debe ser un string válido');
+          return () => {}; // Retornar función vacía para evitar errores
         }
-      };
+
+        if (typeof callback !== 'function') {
+          console.error('on: callback debe ser una función');
+          return () => {}; // Retornar función vacía para evitar errores
+        }
+
+        if (!subscribers.current.has(eventType)) {
+          subscribers.current.set(eventType, new Set());
+        }
+        subscribers.current.get(eventType).add(callback);
+
+        // Retornar función para desuscribirse
+        return () => {
+          try {
+            const eventSubscribers = subscribers.current.get(eventType);
+            if (eventSubscribers) {
+              eventSubscribers.delete(callback);
+              if (eventSubscribers.size === 0) {
+                subscribers.current.delete(eventType);
+              }
+            }
+          } catch (error) {
+            console.error('Error al desuscribirse del evento:', error);
+          }
+        };
+      } catch (error) {
+        console.error('Error en método on:', error);
+        return () => {}; // Retornar función vacía para evitar errores
+      }
     },
     off: (eventType, callback) => {
       const eventSubscribers = subscribers.current.get(eventType);
