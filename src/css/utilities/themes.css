@@ -1,0 +1,122 @@
+/* ========================================
+    CSS THEMES
+   ======================================== */
+
+:root {
+  --bg-primary: var(--primary-light);
+  --bg-secondary: var(--secondary-dark);
+  --text-primary: var(--primary-dark);
+  --text-secondary: var(--secondary-light);
+  --border-primary: var(--primary-border);
+  --border-secondary: var(--secondary-border);
+  --bg-button-primary: var(--button-primary);
+  --bg-button-primary-hover: var(--button-primary-hover);
+  --bg-button-primary-focus: var(--button-primary-focus);
+  --bg-button-primary-active: var(--button-primary-active);
+  --bg-button-primary-disabled: var(--button-primary-disabled);
+  --bg-button-primary-shadow: var(--button-primary-shadow);
+  --success: var(--success-main);
+  --success-secondary: var(--success-aux);
+  --warning: var(--warning-main);
+  --warning-secondary: var(--warning-aux);
+  --error: var(--error-main);
+  --error-secondary: var(--error-aux);
+  --info: var(--info-main);
+  --info-secondary: var(--info-aux);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-primary: var(--primary-light);
+    --bg-secondary: var(--secondary-dark);
+    --text-primary: var(--primary-dark);
+    --text-secondary: var(--secondary-light);
+    --border-primary: var(--primary-border);
+    --border-secondary: var(--secondary-border);
+    --bg-button-primary: var(--button-primary);
+    --bg-button-primary-hover: var(--button-primary-hover);
+    --bg-button-primary-focus: var(--button-primary-focus);
+    --bg-button-primary-active: var(--button-primary-active);
+    --bg-button-primary-disabled: var(--button-primary-disabled);
+    --bg-button-primary-shadow: var(--button-primary-shadow);
+    --success: var(--success-main);
+    --success-secondary: var(--success-aux);
+    --warning: var(--warning-main);
+    --warning-secondary: var(--warning-aux);
+    --error: var(--error-main);
+    --error-secondary: var(--error-aux);
+    --info: var(--info-main);
+    --info-secondary: var(--info-aux);
+  }
+}
+
+[data-theme='light'] {
+  --bg-primary: var(--primary-light);
+  --bg-secondary: var(--secondary-dark);
+  --text-primary: var(--primary-dark);
+  --text-secondary: var(--secondary-light);
+  --border-primary: var(--primary-border);
+  --border-secondary: var(--secondary-border);
+  --bg-button-primary: var(--button-primary);
+  --bg-button-primary-hover: var(--button-primary-hover);
+  --bg-button-primary-focus: var(--button-primary-focus);
+  --bg-button-primary-active: var(--button-primary-active);
+  --bg-button-primary-disabled: var(--button-primary-disabled);
+  --bg-button-primary-shadow: var(--button-primary-shadow);
+  --success: var(--success-main);
+  --success-secondary: var(--success-aux);
+  --warning: var(--warning-main);
+  --warning-secondary: var(--warning-aux);
+  --error: var(--error-main);
+  --error-secondary: var(--error-aux);
+  --info: var(--info-main);
+  --info-secondary: var(--info-aux);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: var(--primary-dark);
+    --bg-secondary: var(--secondary-light);
+    --text-primary: var(--primary-light);
+    --text-secondary: var(--secondary-dark);
+    --border-primary: var(--primary-border);
+    --border-secondary: var(--secondary-border);
+    --bg-button-primary: var(--button-secondary);
+    --bg-button-primary-hover: var(--button-secondary-hover);
+    --bg-button-primary-focus: var(--button-secondary-focus);
+    --bg-button-primary-active: var(--button-secondary-active);
+    --bg-button-primary-disabled: var(--button-secondary-disabled);
+    --bg-button-primary-shadow: var(--button-secondary-shadow);
+    --success: var(--success-aux);
+    --success-secondary: var(--success-main);
+    --warning: var(--warning-aux);
+    --warning-secondary: var(--warning-main);
+    --error: var(--error-aux);
+    --error-secondary: var(--error-main);
+    --info: var(--info-aux);
+    --info-secondary: var(--info-main);
+  }
+}
+
+[data-theme='dark'] {
+  --bg-primary: var(--primary-dark);
+  --bg-secondary: var(--secondary-light);
+  --text-primary: var(--primary-light);
+  --text-secondary: var(--secondary-dark);
+  --border-primary: var(--primary-border);
+  --border-secondary: var(--secondary-border);
+  --bg-button-primary: var(--button-secondary);
+  --bg-button-primary-hover: var(--button-secondary-hover);
+  --bg-button-primary-focus: var(--button-secondary-focus);
+  --bg-button-primary-active: var(--button-secondary-active);
+  --bg-button-primary-disabled: var(--button-secondary-disabled);
+  --bg-button-primary-shadow: var(--button-secondary-shadow);
+  --success: var(--success-aux);
+  --success-secondary: var(--success-main);
+  --warning: var(--warning-aux);
+  --warning-secondary: var(--warning-main);
+  --error: var(--error-aux);
+  --error-secondary: var(--error-main);
+  --info: var(--info-aux);
+  --info-secondary: var(--info-main);
+} */

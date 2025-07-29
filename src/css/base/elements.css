@@ -1,0 +1,82 @@
+/* ========================================
+    CSS ELEMENTS
+   ======================================== */
+
+.btn {
+  background-color: var(--bg-button-primary);
+  border: 1px solid var(--bg-button-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-weight: var(--font-weight-medium);
+  height: auto;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: calc(1em - 1px);
+  padding-right: calc(1em - 1px);
+  padding-top: calc(0.5em - 1px);
+}
+
+.btn strong {
+  color: inherit;
+}
+
+.btn .icon,
+.btn .icon.is-small,
+.btn .icon.is-medium,
+.btn .icon.is-large {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.btn .icon:first-child:not(:last-child) {
+  margin-inline-start: calc(-0.5 * 0.5em);
+  margin-inline-end: calc(1em * 0.25);
+}
+.btn .icon:last-child:not(:first-child) {
+  margin-inline-start: calc(1em * 0.25);
+  margin-inline-end: calc(-0.5 * 1em);
+}
+.btn .icon:first-child:last-child {
+  margin-inline-start: calc(-0.5 * 1em);
+  margin-inline-end: calc(-0.5 * 1em);
+}
+
+.btn:hover {
+  background-color: var(--bg-button-primary-hover);
+}
+
+.btn:focus,
+.btn:focus-visible {
+  background-color: var(--bg-button-primary-focus);
+  box-shadow: 0 0 0 3px var(--bg-button-primary-shadow);
+}
+
+.btn:active,
+.btn.is-active {
+  background-color: var(--bg-button-primary-active);
+}
+
+.btn:disabled {
+  background-color: var(--bg-button-primary-disabled);
+  cursor: not-allowed;
+}
+
+.btn.is-loading {
+  box-shadow: none;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.is-loading::after {
+  position: absolute !important;
+  left: calc(50% - 1em * 0.5);
+  top: calc(50% - 1em * 0.5);
+}
+
+.btn.is-rounded {
+  border-radius: var(--radius-full);
+  padding-left: calc(1em + 0.25em - 1px);
+  padding-right: calc(1em + 0.25em - 1px);
+}

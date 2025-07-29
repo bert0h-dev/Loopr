@@ -1,6 +1,6 @@
 {
   "name": "loopr",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Un motor de calendario ligero y extensible, construido con Preact, que permite renderizar vistas y eventos de forma dinámica.",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.esm.js",
