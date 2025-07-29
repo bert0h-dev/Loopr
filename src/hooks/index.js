@@ -8,3 +8,10 @@ export { useCalendarMonth } from './useCalendarMonth.js';
 export { useCalendarReducer } from './useCalendarReducer.js';
 export { useCalendarUI } from './useCalendarUI.js';
 export { useCalendarViews } from './useCalendarViews.js';
+
+// Hooks de rendimiento
+export {
+  usePerformanceMonitor,
+  useDebouncedValue,
+  useWindowSize,
+} from './usePerformance.js';
