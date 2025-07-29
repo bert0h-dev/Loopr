@@ -1,9 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { useCalendarConfig } from '@/hooks/useCalendarConfig.js';
-import { useCalendarDate } from '@/hooks/useCalendarDate.js';
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 import { ToolbarOptions } from '@/config/ToolbarConfig.js';
-import { useCalendarViews } from '@/hooks/useCalendarViews.js';
 
 /**
  * @name ToolbarSection
@@ -18,10 +16,18 @@ export const ToolbarSection = ({ section }) => {
   let children = [];
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Hook del contexto
-  const { currentDate, ...dateController } = useCalendarDate();
-  const { config } = useCalendarConfig();
-  const { activeView, showMonthView } = useCalendarViews();
+  // Acceso al contexto unificado del calendario
+  const {
+    currentDate,
+    config,
+    activeView,
+    dateController,
+    // Acciones categorizadas (nueva arquitectura)
+    navigation,
+    view,
+    // Acciones directas para compatibilidad
+    setActiveView,
+  } = useCalendarContext();
 
   let formattedConfig = config.viewFormats[activeView] || {
     month: 'long',
@@ -95,31 +101,31 @@ export const ToolbarSection = ({ section }) => {
   const handleGoToAction = action => {
     switch (action) {
       case 'today':
-        dateController.goToToday();
+        navigation.goToToday();
         break;
       case 'prev':
-        dateController.prevMonth();
+        navigation.prevMonth();
         break;
       case 'next':
-        dateController.nextMonth();
+        navigation.nextMonth();
         break;
       case 'prevYear':
-        dateController.prevYear();
+        navigation.prevYear();
         break;
       case 'nextYear':
-        dateController.nextYear();
+        navigation.nextYear();
         break;
       case 'month':
-        showMonthView;
+        view.showMonthView();
         break;
       case 'week':
-        console.log('Función de vista semanal no implementada');
+        view.showWeekView();
         break;
       case 'day':
-        console.log('Función de vista diaria no implementada');
+        view.showDayView();
         break;
       case 'agenda':
-        console.log('Función de vista de agenda no implementada');
+        view.showAgendaView();
         break;
       default:
         console.warn(`Acción desconocida: ${action}`);

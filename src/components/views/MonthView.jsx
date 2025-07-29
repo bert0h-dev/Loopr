@@ -2,8 +2,7 @@ import { h } from 'preact';
 import { MonthDaysHeader } from '@/components/viewMonth/MonthDaysHeader.jsx';
 import { MonthDays } from '@/components/viewMonth/MonthDays.jsx';
 import { useCalendarMonth } from '@/hooks/useCalendarMonth.js';
-import { useCalendarDate } from '@/hooks/useCalendarDate.js';
-import { useCalendarConfig } from '@/hooks/useCalendarConfig.js';
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 
 /**
  * @name MonthView
@@ -17,14 +16,13 @@ import { useCalendarConfig } from '@/hooks/useCalendarConfig.js';
  * @returns {JSX.Element} Elemento JSX que representa la vista mensual
  */
 export const MonthView = ({ date }) => {
-  // Usa la fecha del contexto y tambien toma la configuracion para obtener el el inicio de la semana
-  const { currentDate } = useCalendarDate();
-  const { config } = useCalendarConfig();
+  // Acceso unificado al contexto del calendario
+  const { currentDate, config } = useCalendarContext();
 
-  // Se usa la fecha del contexto si no se propociona una fecha especifica
+  // Se usa la fecha del contexto si no se proporciona una fecha específica
   const monthDate = date || currentDate;
 
-  // Se obtiene la informacion de los dias del mes
+  // Se obtiene la información de los días del mes
   const monthCalendarDays = useCalendarMonth(monthDate, config.firstDayOfWeek);
 
   return (

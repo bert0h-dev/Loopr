@@ -1,8 +1,9 @@
 import { h, createContext } from 'preact';
-import { useContext, useReducer, useCallback } from 'preact/hooks';
+import { useContext, useReducer, useCallback, useMemo } from 'preact/hooks';
 import { useCalendarReducer } from '@/hooks/useCalendarReducer.js';
 import { initialConfig as initialState } from '@/config/initialConfig.js';
 import { useCalendarController } from '@/hooks/useCalendarController.js';
+import { createCalendarActionsBase } from '@/hooks/useCalendarActions.js';
 
 /**
  * @name CalendarContext
@@ -39,87 +40,303 @@ export const CalendarProvider = ({
   // Hook del controlador de fechas
   const [currentDate, dateController] = useCalendarController();
 
-  // Acciones del calendario
-  const actions = {
-    // Configuración
-    updateConfig: useCallback(configUpdates => {
-      dispatch({ type: 'SET_CONFIG', payload: configUpdates });
-    }, []),
+  // Usar las acciones base para evitar duplicación de código
+  const actions = createCalendarActionsBase(dispatch);
 
-    // Vistas
-    setActiveView: useCallback(view => {
-      dispatch({ type: 'SET_ACTIVE_VIEW', payload: view });
-    }, []),
-
-    // Eventos
-    setEvents: useCallback(events => {
-      dispatch({ type: 'SET_EVENTS', payload: events });
-    }, []),
-
-    addEvent: useCallback(event => {
-      const eventWithId = { ...event, id: event.id || generateEventId() };
-      dispatch({ type: 'ADD_EVENT', payload: eventWithId });
-    }, []),
-
-    updateEvent: useCallback((eventId, updates) => {
-      dispatch({ type: 'UPDATE_EVENT', payload: { id: eventId, updates } });
-    }, []),
-
-    deleteEvent: useCallback(eventId => {
-      dispatch({ type: 'DELETE_EVENT', payload: eventId });
-    }, []),
-
-    setSelectedEvents: useCallback(events => {
-      dispatch({ type: 'SET_SELECTED_EVENTS', payload: events });
-    }, []),
-
-    // UI
-    setUIState: useCallback(uiUpdates => {
-      dispatch({ type: 'SET_UI_STATE', payload: uiUpdates });
-    }, []),
-
-    openEventModal: useCallback((date = null) => {
-      dispatch({
-        type: 'SET_UI_STATE',
-        payload: {
-          isEventModalOpen: true,
-          selectedDate: date,
+  // Crear acciones categorizadas para mejor organización
+  const categorizedActions = useMemo(() => {
+    // Acciones de configuración
+    const configActions = {
+      updateConfig: actions.updateConfig,
+      setLocale: useCallback(
+        locale => {
+          actions.updateConfig({ locale });
         },
-      });
-    }, []),
-
-    closeEventModal: useCallback(() => {
-      dispatch({
-        type: 'SET_UI_STATE',
-        payload: {
-          isEventModalOpen: false,
-          selectedDate: null,
+        [actions.updateConfig]
+      ),
+      setFirstDayOfWeek: useCallback(
+        day => {
+          actions.updateConfig({ firstDayOfWeek: day });
         },
-      });
-    }, []),
+        [actions.updateConfig]
+      ),
+      setTheme: useCallback(
+        theme => {
+          actions.updateConfig({ theme });
+        },
+        [actions.updateConfig]
+      ),
+      toggleTheme: useCallback(() => {
+        const newTheme = state.config.theme === 'light' ? 'dark' : 'light';
+        actions.updateConfig({ theme: newTheme });
+      }, [actions.updateConfig, state.config.theme]),
+      setTimeFormat: useCallback(
+        format => {
+          actions.updateConfig({ timeFormat: format });
+        },
+        [actions.updateConfig]
+      ),
+      setDateFormat: useCallback(
+        format => {
+          actions.updateConfig({ dateFormat: format });
+        },
+        [actions.updateConfig]
+      ),
+    };
 
-    // Utilidades
-    setError: useCallback(error => {
-      dispatch({ type: 'SET_ERROR', payload: error });
-    }, []),
+    // Acciones de navegación
+    const navigationActions = {
+      goToToday: useCallback(() => {
+        dateController.goToToday();
+      }, [dateController]),
+      nextMonth: useCallback(() => {
+        dateController.nextMonth();
+      }, [dateController]),
+      prevMonth: useCallback(() => {
+        dateController.prevMonth();
+      }, [dateController]),
+      nextYear: useCallback(() => {
+        dateController.nextYear();
+      }, [dateController]),
+      prevYear: useCallback(() => {
+        dateController.prevYear();
+      }, [dateController]),
+      nextWeek: useCallback(() => {
+        dateController.incrementDate(1, 'week');
+      }, [dateController]),
+      prevWeek: useCallback(() => {
+        dateController.incrementDate(-1, 'week');
+      }, [dateController]),
+      nextDay: useCallback(() => {
+        dateController.incrementDate(1, 'day');
+      }, [dateController]),
+      prevDay: useCallback(() => {
+        dateController.incrementDate(-1, 'day');
+      }, [dateController]),
+      setDate: useCallback(
+        date => {
+          dateController.setDate(date);
+        },
+        [dateController]
+      ),
+      gotoDate: useCallback(
+        date => {
+          dateController.gotoDate(date);
+        },
+        [dateController]
+      ),
+      incrementDate: useCallback(
+        (amount, unit) => {
+          dateController.incrementDate(amount, unit);
+        },
+        [dateController]
+      ),
+    };
 
-    setLoading: useCallback(loading => {
-      dispatch({ type: 'SET_LOADING', payload: loading });
-    }, []),
-  };
+    // Acciones de vista
+    const viewActions = {
+      setActiveView: actions.setActiveView,
+      showMonthView: useCallback(() => {
+        actions.setActiveView('month');
+      }, [actions.setActiveView]),
+      showWeekView: useCallback(() => {
+        actions.setActiveView('week');
+      }, [actions.setActiveView]),
+      showDayView: useCallback(() => {
+        actions.setActiveView('day');
+      }, [actions.setActiveView]),
+      showAgendaView: useCallback(() => {
+        actions.setActiveView('agenda');
+      }, [actions.setActiveView]),
+      showYearView: useCallback(() => {
+        actions.setActiveView('year');
+      }, [actions.setActiveView]),
+    };
 
-  // Valor del contexto
-  const contextValue = {
-    // Estado
-    ...state,
-    currentDate,
+    // Acciones de eventos (con promesas para manejo de errores)
+    const eventActions = {
+      setEvents: actions.setEvents,
+      addEvent: useCallback(
+        event => {
+          return new Promise((resolve, reject) => {
+            try {
+              const result = actions.addEvent(event);
+              resolve(result || event);
+            } catch (error) {
+              actions.setError(`Error al agregar evento: ${error.message}`);
+              reject(error);
+            }
+          });
+        },
+        [actions.addEvent, actions.setError]
+      ),
+      updateEvent: useCallback(
+        (eventId, updates) => {
+          return new Promise((resolve, reject) => {
+            try {
+              const result = actions.updateEvent(eventId, updates);
+              resolve(result || { id: eventId, ...updates });
+            } catch (error) {
+              actions.setError(`Error al actualizar evento: ${error.message}`);
+              reject(error);
+            }
+          });
+        },
+        [actions.updateEvent, actions.setError]
+      ),
+      deleteEvent: useCallback(
+        eventId => {
+          return new Promise((resolve, reject) => {
+            try {
+              const result = actions.deleteEvent(eventId);
+              resolve(result || eventId);
+            } catch (error) {
+              actions.setError(`Error al eliminar evento: ${error.message}`);
+              reject(error);
+            }
+          });
+        },
+        [actions.deleteEvent, actions.setError]
+      ),
+      setSelectedEvents: actions.setSelectedEvents,
+      clearSelectedEvents: useCallback(() => {
+        actions.setSelectedEvents([]);
+      }, [actions.setSelectedEvents]),
+      selectEvent: useCallback(
+        event => {
+          const currentSelected = state.selectedEvents || [];
+          const isAlreadySelected = currentSelected.some(
+            e => e.id === event.id
+          );
 
-    // Controlador de fechas
-    dateController,
+          if (isAlreadySelected) {
+            actions.setSelectedEvents(
+              currentSelected.filter(e => e.id !== event.id)
+            );
+          } else {
+            actions.setSelectedEvents([...currentSelected, event]);
+          }
+        },
+        [actions.setSelectedEvents, state.selectedEvents]
+      ),
+    };
 
-    // Acciones
-    ...actions,
-  };
+    // Acciones de UI
+    const uiActions = {
+      setUIState: actions.setUIState,
+      openEventModal: actions.openEventModal,
+      closeEventModal: actions.closeEventModal,
+      setError: actions.setError,
+      clearError: actions.clearError,
+      setLoading: actions.setLoading,
+      toggleSidebar: useCallback(() => {
+        actions.setUIState(prev => ({
+          ...prev,
+          sidebarOpen: !prev.sidebarOpen,
+        }));
+      }, [actions.setUIState]),
+      setSidebarOpen: useCallback(
+        open => {
+          actions.setUIState(prev => ({
+            ...prev,
+            sidebarOpen: open,
+          }));
+        },
+        [actions.setUIState]
+      ),
+    };
+
+    return {
+      config: configActions,
+      navigation: navigationActions,
+      view: viewActions,
+      events: eventActions,
+      ui: uiActions,
+    };
+  }, [actions, dateController, state.config.theme, state.selectedEvents]);
+
+  // Valor del contexto optimizado con memoización
+  const contextValue = useMemo(
+    () => ({
+      // Estado del calendario (incluye state.config con la configuración)
+      ...state,
+      currentDate,
+
+      // Controlador de fechas
+      dateController,
+
+      // Acciones base (mantener para compatibilidad)
+      ...actions,
+
+      // Acciones categorizadas (nueva API)
+      // NOTA: configActions son las ACCIONES, state.config es la CONFIGURACIÓN
+      configActions: categorizedActions.config,
+      navigation: categorizedActions.navigation,
+      view: categorizedActions.view,
+      events: categorizedActions.events,
+      ui: categorizedActions.ui,
+
+      // Métodos de utilidad adicionales
+      utils: {
+        // Generar ID único para eventos
+        generateEventId: actions.generateEventId,
+
+        // Validar evento
+        validateEvent: event => {
+          if (!event || typeof event !== 'object') {
+            throw new Error('El evento debe ser un objeto válido');
+          }
+          if (!event.title || event.title.trim() === '') {
+            throw new Error('El evento debe tener un título');
+          }
+          if (!event.date) {
+            throw new Error('El evento debe tener una fecha');
+          }
+          return true;
+        },
+
+        // Validar vista
+        validateView: view => {
+          const validViews = ['month', 'week', 'day', 'agenda', 'year'];
+          if (!validViews.includes(view)) {
+            throw new Error(
+              `Vista '${view}' no es válida. Vistas disponibles: ${validViews.join(', ')}`
+            );
+          }
+          return true;
+        },
+
+        // Obtener configuración actual
+        getCurrentConfig: () => state.config,
+
+        // Obtener eventos actuales
+        getCurrentEvents: () => state.events,
+
+        // Obtener estado UI actual
+        getCurrentUIState: () => state.ui,
+
+        // Verificar si hay errores
+        hasError: () => !!state.ui?.error,
+
+        // Verificar si está cargando
+        isLoading: () => !!state.ui?.loading,
+      },
+
+      // Información del contexto para debugging
+      _contextInfo: {
+        version: '2.0.0',
+        features: [
+          'enhanced-actions',
+          'error-handling',
+          'validation',
+          'utilities',
+          'hooks-integration',
+        ],
+        lastUpdate: new Date().toISOString(),
+      },
+    }),
+    [state, currentDate, dateController, actions, categorizedActions]
+  );
 
   return (
     <CalendarContext.Provider value={contextValue}>
@@ -150,10 +367,3 @@ export const useCalendarContext = () => {
 
   return context;
 };
-
-/**
- * Genera un ID único para eventos
- */
-function generateEventId() {
-  return `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}

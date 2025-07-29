@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCalendarConfig } from '@/hooks/useCalendarConfig.js';
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 import { ToolbarSection } from '@/components/viewHeader/ToolbarSection.jsx';
 
 /**
@@ -11,8 +11,8 @@ import { ToolbarSection } from '@/components/viewHeader/ToolbarSection.jsx';
  * @returns {JSX.Element} Elemento JSX que representa la barra de herramientas del calendario
  */
 export const ToolBar = () => {
-  // Hook del contexto
-  const { config } = useCalendarConfig();
+  // Acceso directo al contexto
+  const { config } = useCalendarContext();
   let startContent = config.viewToolbar.start;
   let centerContent = config.viewToolbar.center;
   let endContent = config.viewToolbar.end;
