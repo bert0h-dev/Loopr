@@ -1,9 +1,11 @@
 {
   "name": "loopr",
+  "type": "module",
   "version": "1.0.3",
   "description": "Un motor de calendario ligero y extensible, construido con Preact, que permite renderizar vistas y eventos de forma dinámica.",
   "main": "dist/bundle.cjs.js",
   "module": "dist/bundle.esm.js",
+  "sideEffects": false,
   "files": [
     "dist"
   ],
@@ -11,10 +13,13 @@
     "clean": "rimraf dist",
     "dev": "npm run clean && rollup -c -w",
     "build": "npm run clean && NODE_ENV=production rollup -c",
+    "build:analyze": "npm run build && echo 'Bundle analysis available at dist/bundle-stats.html'",
+    "preview": "npm run build && npx serve dist/esm",
     "format:check": "prettier --check .",
     "format:write": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx",
-    "lint:fix": "eslint . --ext .js,.jsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx --fix",
+    "perf:audit": "npm run build && echo 'ESM Build:' && ls -la dist/esm/ && echo 'CJS Build:' && ls -la dist/cjs/ && du -sh dist/*"
   },
   "repository": {
     "type": "git",
@@ -57,6 +62,7 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-serve": "^3.0.0"
+    "rollup-plugin-serve": "^3.0.0",
+    "rollup-plugin-visualizer": "^6.0.3"
   }
 }
