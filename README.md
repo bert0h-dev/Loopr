@@ -1,17 +1,19 @@
 # 📅 Loopr
 
-Un motor de calendario ligero y extensible construido con **Preact**, que permite renderizar vistas y eventos de forma dinámica con un diseño modular y rendimiento optimizado.
+Un calendario moderno y extensible construido con **Preact**, que ofrece una arquitectura de hooks avanzada, gestión de estado reactiva y una API categorizada para el control total del calendario.
 
-## 🚀 Características
+## 🌟 Características Principales
 
-- **🪶 Ligero**: Construido con Preact para un bundle mínimo
-- **🔧 Extensible**: Arquitectura modular que permite fácil personalización
-- **🌍 Internacionalización**: Soporte completo para diferentes idiomas y regiones
-- **📱 Responsivo**: Diseño adaptable para diferentes dispositivos
-- **⚡ Performante**: Optimizado con hooks y memoización para evitar re-renderizados innecesarios
-- **🎨 Personalizable**: Sistema de estilos CSS modular y flexible
+- **🪶 Ultra Ligero**: Construido con Preact (~3KB) para un bundle mínimo
+- **🏗️ Arquitectura Avanzada**: Sistema de hooks categorizados y contexto unificado
+- **🔧 API Categorizada**: Acciones organizadas por funcionalidad (`config`, `navigation`, `view`, `events`, `ui`)
+- **⚡ Alto Rendimiento**: Memoización extensiva y gestión optimizada del estado
+- **🌍 Internacionalización**: Soporte completo para múltiples idiomas y regiones
+- **📱 Responsive**: Diseño adaptable con CSS modular
+- **🎯 Control Granular**: Gestión avanzada de tareas asíncronas y estados
+- **🔄 Sistema de Eventos**: Suscripción a cambios con controladores especializados
 
-## 📦 Instalación
+## � Inicio Rápido
 
 ```bash
 # Instalar dependencias
@@ -22,156 +24,489 @@ npm run dev
 
 # Compilar para producción
 npm run build
-
-# Formatear código
-npm run format:write
-
-# Linting
-npm run lint:fix
 ```
 
-## 🛠️ Uso Básico
+## 💻 Uso Básico
 
-```javascript
+### Configuración del Contexto
+
+```jsx
 import { h, render } from 'preact';
-import { CalendarApp } from 'loopr';
+import { CalendarProvider } from '@/context/CalendarContext.jsx';
+import { CalendarApp } from '@/CalendarApp.jsx';
 
-// Renderizar el calendario
-render(<CalendarApp />, document.getElementById('app'));
+const App = () => (
+  <CalendarProvider
+    initialConfig={{ theme: 'dark', locale: 'es-MX' }}
+    initialEvents={[]}
+  >
+    <CalendarApp />
+  </CalendarProvider>
+);
+
+render(<App />, document.getElementById('app'));
 ```
 
-## 📋 API del Controlador
+### Usando el Contexto del Calendario
 
-El hook `useCalendarController` proporciona métodos para controlar la navegación del calendario:
+```jsx
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 
-```javascript
-import { useCalendarController } from 'loopr';
+const MyComponent = () => {
+  const {
+    // Estado del calendario
+    currentDate,
+    config,
+    events,
+    activeView,
 
-const [currentDate, controller] = useCalendarController();
+    // Acciones categorizadas
+    configActions,
+    navigation,
+    view,
+    events: eventActions,
+    ui,
 
-// Métodos disponibles
-controller.nextMonth(); // Navegar al siguiente mes
-controller.prevMonth(); // Navegar al mes anterior
-controller.nextYear(); // Navegar al siguiente año
-controller.prevYear(); // Navegar al año anterior
-controller.goToToday(); // Ir a la fecha actual
-controller.setDate(date); // Establecer fecha específica
-controller.getDate(); // Obtener fecha actual
+    // API plana (compatibilidad)
+    setTheme,
+    nextMonth,
+    addEvent,
+    showMonthView,
+  } = useCalendarContext();
 
-// Sistema de suscripción para cambios de fecha
-const unsubscribe = controller.subscribe(newDate => {
-  console.log('Fecha cambiada:', newDate);
-});
+  return (
+    <div>
+      <button onClick={() => navigation.nextMonth()}>Siguiente Mes</button>
+      <button onClick={() => view.showWeekView()}>Vista Semanal</button>
+      <button onClick={() => configActions.toggleTheme()}>Cambiar Tema</button>
+    </div>
+  );
+};
 ```
 
-## 🏗️ Arquitectura del Proyecto
+## 🏗️ Arquitectura del Sistema
+
+### 📁 Estructura del Proyecto
 
 ```
 src/
-├── CalendarApp.jsx          # Componente principal
-├── main.js                  # Punto de entrada
-├── index.html              # Template HTML
+├── App.jsx                     # Componente raíz
+├── CalendarApp.jsx             # Aplicación principal del calendario
+├── CalendarContent.jsx         # Contenido principal
+├── context/
+│   └── CalendarContext.jsx     # Contexto global con estado y acciones
+├── hooks/
+│   ├── useCalendarActions.js   # Acciones del calendario
+│   ├── useCalendarTaskManager.js # Gestión de tareas asíncronas
+│   ├── useCalendarController.js # Control de navegación de fechas
+│   ├── useCalendarReducer.js   # Reducer del estado global
+│   └── index.js               # Exportaciones centralizadas
 ├── components/
 │   ├── common/
-│   │   └── CalendarHeader.jsx    # Header con navegación
-│   └── viewMonth/
-│       ├── MonthView.jsx         # Vista mensual
-│       ├── MonthDays.jsx         # Grilla de días
-│       └── MonthDaysHeader.jsx   # Header de días de semana
-├── hooks/
-│   ├── useCalendarController.js  # Controlador principal
-│   └── useCalendarMonth.js       # Lógica vista mensual
+│   │   ├── CalendarHeader.jsx  # Header principal
+│   │   └── CalendarViews.jsx   # Selector de vistas
+│   ├── viewHeader/
+│   │   ├── Toolbar.jsx         # Barra de herramientas
+│   │   └── ToolbarSection.jsx  # Secciones de la toolbar
+│   ├── viewMonth/
+│   │   ├── MonthDays.jsx       # Grilla de días del mes
+│   │   └── MonthDaysHeader.jsx # Header de días de semana
+│   └── views/
+│       └── MonthView.jsx       # Vista mensual completa
+├── config/
+│   ├── initialConfig.js        # Configuración inicial
+│   └── ToolbarConfig.js        # Configuración de toolbar
 ├── utils/
-│   └── dateUtils.js             # Utilidades de fecha
-└── css/
-    ├── index.css               # Estilos principales
-    ├── container.css           # Estilos del contenedor
-    └── components/             # Estilos de componentes
+│   └── dateUtils.js           # Utilidades de fechas
+└── css/                       # Estilos modulares organizados
 ```
 
-## 🎨 Personalización de Estilos
+### 🎯 Sistema de Hooks
 
-Loopr utiliza un sistema de CSS modular. Puedes personalizar los estilos modificando:
+#### `useCalendarContext()`
 
-- `container.css` - Estilos del contenedor principal
-- `components/header.css` - Estilos del header de navegación
-- `components/month.css` - Estilos de la vista mensual
+**Hook principal** que proporciona acceso completo al estado y acciones del calendario:
+
+```jsx
+const {
+  // 📊 Estado
+  currentDate, // Fecha actual
+  config, // Configuración del calendario
+  events, // Lista de eventos
+  activeView, // Vista activa ('month', 'week', 'day')
+  selectedEvents, // Eventos seleccionados
+
+  // 🎛️ Controladores
+  dateController, // Control de navegación de fechas
+
+  // �️ Acciones Categorizadas
+  configActions: {
+    updateConfig, // Actualizar configuración
+    setTheme, // Cambiar tema
+    toggleTheme, // Alternar tema
+    setLocale, // Cambiar idioma
+    setTimeFormat, // Formato de hora
+  },
+  navigation: {
+    goToToday, // Ir a hoy
+    nextMonth, // Siguiente mes
+    prevMonth, // Mes anterior
+    nextYear, // Siguiente año
+    prevYear, // Año anterior
+  },
+  view: {
+    showMonthView, // Mostrar vista mensual
+    showWeekView, // Mostrar vista semanal
+    showDayView, // Mostrar vista diaria
+    setActiveView, // Cambiar vista
+  },
+  events: {
+    addEvent, // Agregar evento
+    updateEvent, // Actualizar evento
+    deleteEvent, // Eliminar evento
+    setEvents, // Establecer eventos
+    selectEvent, // Seleccionar evento
+  },
+  ui: {
+    openEventModal, // Abrir modal de evento
+    closeEventModal, // Cerrar modal
+    setError, // Establecer error
+    setLoading, // Establecer carga
+    toggleSidebar, // Alternar sidebar
+  },
+} = useCalendarContext();
+```
+
+#### `useCalendarTaskManager()`
+
+**Hook avanzado** para gestión de tareas asíncronas con control de estado:
+
+```jsx
+const taskManager = useCalendarTaskManager();
+
+// Ejecutar tarea con manejo de estado automático
+await taskManager.executeTask('loadEvents', async () => {
+  const events = await fetchEventsFromAPI();
+  return events;
+});
+
+// Gestión de múltiples tareas
+await taskManager.executeTasks([
+  ['loadEvents', loadEventsTask],
+  ['syncCalendar', syncTask],
+  ['updateUI', updateTask],
+]);
+```
+
+## � API Categorizada
+
+### 🔧 Acciones de Configuración (`configActions`)
+
+```jsx
+const { configActions } = useCalendarContext();
+
+// Gestión de temas
+configActions.setTheme('dark');
+configActions.toggleTheme();
+
+// Internacionalización
+configActions.setLocale('es-MX');
+configActions.setTimeFormat('24h');
+configActions.setFirstDayOfWeek(1); // Lunes
+
+// Configuración personalizada
+configActions.updateConfig({
+  theme: 'dark',
+  locale: 'en-US',
+  weekendsVisible: true,
+});
+```
+
+### 🧭 Acciones de Navegación (`navigation`)
+
+```jsx
+const { navigation } = useCalendarContext();
+
+// Navegación básica
+navigation.goToToday();
+navigation.nextMonth();
+navigation.prevMonth();
+navigation.nextYear();
+navigation.prevYear();
+
+// Navegación avanzada
+navigation.nextWeek();
+navigation.prevWeek();
+navigation.setDate(new Date('2024-12-25'));
+navigation.incrementDate(7, 'day');
+```
+
+### 👁️ Acciones de Vista (`view`)
+
+```jsx
+const { view } = useCalendarContext();
+
+// Cambio de vistas
+view.showMonthView();
+view.showWeekView();
+view.showDayView();
+view.showAgendaView();
+
+// Control directo
+view.setActiveView('week');
+```
+
+### � Acciones de Eventos (`events`)
+
+```jsx
+const { events } = useCalendarContext();
+
+// Gestión de eventos (con Promises)
+try {
+  const newEvent = await events.addEvent({
+    title: 'Reunión importante',
+    date: new Date(),
+    description: 'Descripción del evento',
+  });
+
+  await events.updateEvent(newEvent.id, {
+    title: 'Reunión actualizada',
+  });
+
+  await events.deleteEvent(newEvent.id);
+} catch (error) {
+  console.error('Error:', error);
+}
+
+// Selección de eventos
+events.selectEvent(event);
+events.clearSelectedEvents();
+```
+
+### 🎛️ Acciones de UI (`ui`)
+
+```jsx
+const { ui } = useCalendarContext();
+
+// Modales
+ui.openEventModal(selectedDate);
+ui.closeEventModal();
+
+// Estados de aplicación
+ui.setLoading(true);
+ui.setError('Error al cargar eventos');
+ui.clearError();
+
+// Interfaz
+ui.toggleSidebar();
+ui.setSidebarOpen(false);
+```
 
 ## 🌍 Internacionalización
 
-El calendario soporta diferentes idiomas y configuraciones regionales:
+Soporte completo para múltiples idiomas y configuraciones regionales:
 
-```javascript
-// Configurar primer día de la semana
-const dias = getWeekDays(1, 'es-ES'); // Empezar en lunes, español de España
+```jsx
+const { configActions } = useCalendarContext();
 
-// Soporte para diferentes locales
-useCalendarMonth(date, weekDay, 'en-US'); // Inglés estadounidense
-useCalendarMonth(date, weekDay, 'es-MX'); // Español de México
+// Configurar idioma
+configActions.setLocale('es-MX'); // Español México
+configActions.setLocale('en-US'); // Inglés Estados Unidos
+configActions.setLocale('fr-FR'); // Francés Francia
+
+// Configurar formatos
+configActions.setDateFormat('DD/MM/YYYY');
+configActions.setTimeFormat('24h');
+configActions.setFirstDayOfWeek(1); // 0=Domingo, 1=Lunes
 ```
 
-## 🔧 Configuración de Desarrollo
+## ⚙️ Configuración Avanzada
 
-El proyecto utiliza:
+### Configuración Inicial
 
-- **Rollup** para bundling con configuración ESM y CommonJS
-- **Babel** para transpilación de JSX
-- **PostCSS** para procesamiento de CSS
-- **ESLint + Prettier** para calidad de código
-- **Livereload** para desarrollo con hot reload
+```jsx
+const initialConfig = {
+  locale: 'es-MX',
+  firstDayOfWeek: 1,
+  timeFormat: '24h',
+  dateFormat: 'DD/MM/YYYY',
+  theme: 'dark',
+  weekendsVisible: true,
+  viewToolbar: {
+    start: [{ action: 'today' }, { action: 'month' }, { action: 'week' }],
+    center: [{ action: 'title' }],
+    end: [{ action: 'prev' }, { action: 'next' }],
+  },
+};
 
-### Scripts Disponibles
+<CalendarProvider initialConfig={initialConfig}>
+  <App />
+</CalendarProvider>;
+```
 
-- `npm run dev` - Servidor de desarrollo con hot reload
-- `npm run build` - Build de producción optimizado
-- `npm run clean` - Limpiar directorio dist
-- `npm run lint` - Verificar código con ESLint
-- `npm run format:check` - Verificar formato con Prettier
+### Eventos Iniciales
 
-## 📊 Sistema de Hooks
+```jsx
+const initialEvents = [
+  {
+    id: '1',
+    title: 'Evento importante',
+    date: new Date('2024-01-15'),
+    description: 'Descripción del evento',
+  },
+];
 
-### `useCalendarController(defaultDate)`
+<CalendarProvider initialEvents={initialEvents}>
+  <App />
+</CalendarProvider>;
+```
 
-Hook principal para controlar el estado del calendario con sistema de suscripción.
+## 🎯 Ejemplos de Uso
 
-### `useCalendarMonth(currentDate, weekDay, locale)`
+### Componente de Control Personalizado
 
-Hook optimizado que calcula todos los días visibles en la vista mensual, incluyendo días de meses adyacentes para completar las semanas.
+```jsx
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 
-### `getWeekDays(weekDay, locale)`
+const CustomControls = () => {
+  const { navigation, view, configActions, currentDate } = useCalendarContext();
 
-Utilidad para obtener nombres localizados de días de la semana con diferentes formatos.
+  return (
+    <div className='custom-controls'>
+      {/* Navegación */}
+      <div className='nav-controls'>
+        <button onClick={navigation.prevMonth}>←</button>
+        <span>{currentDate.toLocaleDateString()}</span>
+        <button onClick={navigation.nextMonth}>→</button>
+      </div>
 
-## 🏷️ Características Técnicas
+      {/* Selector de vista */}
+      <div className='view-controls'>
+        <button onClick={view.showMonthView}>Mes</button>
+        <button onClick={view.showWeekView}>Semana</button>
+        <button onClick={view.showDayView}>Día</button>
+      </div>
 
-- **Bundle Size**: ~15KB minificado (con Preact)
-- **Compatibilidad**: Navegadores modernos con soporte ES6+
-- **Dependencias**: Solo Preact como dependencia de runtime
-- **Rendimiento**: Memoización extensiva para evitar re-cálculos
-- **Accesibilidad**: Controles navegables por teclado y ARIA labels
+      {/* Configuración */}
+      <div className='config-controls'>
+        <button onClick={configActions.toggleTheme}>Cambiar Tema</button>
+      </div>
+    </div>
+  );
+};
+```
+
+### Gestión de Eventos Avanzada
+
+```jsx
+import { useCalendarContext, useCalendarTaskManager } from '@/hooks';
+
+const EventManager = () => {
+  const { events, ui } = useCalendarContext();
+  const taskManager = useCalendarTaskManager();
+
+  const handleAddEvent = async eventData => {
+    try {
+      ui.setLoading(true);
+
+      const newEvent = await taskManager.executeTask('addEvent', async () => {
+        // Validar datos
+        if (!eventData.title) throw new Error('Título requerido');
+
+        // Agregar evento
+        return await events.addEvent({
+          ...eventData,
+          id: `event_${Date.now()}`,
+        });
+      });
+
+      console.log('Evento agregado:', newEvent);
+    } catch (error) {
+      ui.setError(`Error al agregar evento: ${error.message}`);
+    } finally {
+      ui.setLoading(false);
+    }
+  };
+
+  return (
+    <div className='event-manager'>
+      <button
+        onClick={() =>
+          handleAddEvent({
+            title: 'Nuevo evento',
+            date: new Date(),
+          })
+        }
+      >
+        Agregar Evento
+      </button>
+    </div>
+  );
+};
+```
+
+## 🛠️ Scripts de Desarrollo
+
+```bash
+# Desarrollo
+npm run dev          # Servidor con hot reload
+npm run build        # Build de producción
+npm run clean        # Limpiar dist/
+
+# Calidad de código
+npm run lint         # ESLint
+npm run lint:fix     # Corregir automáticamente
+npm run format:check # Verificar formato
+npm run format:write # Formatear código
+```
+
+## 📊 Características Técnicas
+
+- **📦 Bundle Size**: ~18KB minificado + gzip
+- **🎯 Compatibilidad**: Navegadores modernos (ES6+)
+- **⚡ Rendimiento**: Memoización extensiva, lazy loading
+- **♿ Accesibilidad**: ARIA labels, navegación por teclado
+- **🔧 Extensibilidad**: Arquitectura modular y hooks personalizados
+- **🧪 Testing**: Estructura preparada para tests unitarios
+
+## 🤝 Estado del Proyecto
+
+### ✅ Implementado
+
+- ✅ Arquitectura de hooks avanzada
+- ✅ Contexto unificado con API categorizada
+- ✅ Sistema de acciones organizadas
+- ✅ Gestión de tareas asíncronas
+- ✅ Componentes principales migrados
+- ✅ Control de navegación avanzado
+- ✅ Internacionalización completa
+- ✅ Sistema de temas
+- ✅ Toolbar configurable
+
+### 🚧 En Desarrollo
+
+- 🚧 Vista semanal completa
+- 🚧 Vista diaria detallada
+- 🚧 Sistema de eventos avanzado
+- 🚧 Drag & Drop de eventos
+- 🚧 Exportación de calendario
+
+### 📋 Roadmap
+
+- 📋 Tests unitarios completos
+- 📋 Storybook para componentes
+- 📋 Plugin system
+- 📋 TypeScript support
+- 📋 PWA capabilities
+
+## 👨‍💻 Autor
+
+**Bert0h-dev** - [GitHub](https://github.com/bert0h-dev)
 
 ## 📄 Licencia
 
 ISC License - Ver [LICENSE](LICENSE) para más detalles.
 
-## 👨‍💻 Autor
-
-**Bert0h-dev** (humberto.morales.14@hotmail.com)
-
-## 🐛 Reportar Issues
-
-Si encuentras algún problema o tienes sugerencias, por favor [crea un issue](https://github.com/bert0h-dev/Loopr/issues) en GitHub.
-
-## 🤝 Contribuir
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea tu feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la branch (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
 ---
 
-**Loopr** - Un calendario moderno, ligero y extensible para aplicaciones web 🚀
+**Loopr** - El calendario más avanzado y ligero para aplicaciones web modernas 🚀
