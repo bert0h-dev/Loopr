@@ -1,4 +1,4 @@
-import { useCalendarContext } from '@/context/CalendarContext';
+import { useCalendarContext } from '@/context/CalendarContext.jsx';
 import { useMemo } from 'preact/hooks';
 
 /**
