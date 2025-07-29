@@ -23,7 +23,7 @@ export const ToolBar = () => {
   };
 
   return (
-    <div className='toolbar header-toolbar'>
+    <div className='toolbar header-toolbar calendar-header'>
       {renderToolbarSection('start', startContent || [])}
       {renderToolbarSection('center', centerContent || [])}
       {renderToolbarSection('end', endContent || [])}

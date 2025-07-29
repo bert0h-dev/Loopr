@@ -1,6 +1,59 @@
 import { h } from 'preact';
-import { MonthView } from '@/components/views/MonthView.jsx';
 import { useCalendarContext } from '@/context/CalendarContext.jsx';
+import { createLazyComponent, LoadingSpinner } from '@/utils/lazyComponent.js';
+
+// Crear componentes lazy para cada vista
+const LazyMonthView = createLazyComponent(
+  () =>
+    import('@/components/views/MonthView.jsx').then(module => ({
+      default: module.MonthView,
+    })),
+  <LoadingSpinner />
+);
+
+const LazyWeekView = createLazyComponent(
+  () =>
+    import('@/components/views/WeekView.jsx').then(module => ({
+      default: module.WeekView,
+    })),
+  <div className='loading-spinner'>
+    <div className='spinner'></div>
+    <span>Cargando vista semanal...</span>
+  </div>
+);
+
+const LazyDayView = createLazyComponent(
+  () =>
+    import('@/components/views/DayView.jsx').then(module => ({
+      default: module.DayView,
+    })),
+  <div className='loading-spinner'>
+    <div className='spinner'></div>
+    <span>Cargando vista diaria...</span>
+  </div>
+);
+
+const LazyAgendaView = createLazyComponent(
+  () =>
+    import('@/components/views/AgendaView.jsx').then(module => ({
+      default: module.AgendaView,
+    })),
+  <div className='loading-spinner'>
+    <div className='spinner'></div>
+    <span>Cargando agenda...</span>
+  </div>
+);
+
+const LazyYearView = createLazyComponent(
+  () =>
+    import('@/components/views/YearView.jsx').then(module => ({
+      default: module.YearView,
+    })),
+  <div className='loading-spinner'>
+    <div className='spinner'></div>
+    <span>Cargando vista anual...</span>
+  </div>
+);
 
 /**
  * @name CalendarViews
@@ -16,31 +69,15 @@ export const CalendarViews = () => {
 
   switch (activeView) {
     case 'month':
-      return <MonthView date={currentDate} />;
+      return <LazyMonthView date={currentDate} />;
     case 'week':
-      return (
-        <div className='calendar-view week-view'>
-          Vista semanal - En desarrollo
-        </div>
-      );
+      return <LazyWeekView date={currentDate} />;
     case 'day':
-      return (
-        <div className='calendar-view day-view'>
-          Vista diaria - En desarrollo
-        </div>
-      );
+      return <LazyDayView date={currentDate} />;
     case 'agenda':
-      return (
-        <div className='calendar-view agenda-view'>
-          Vista agenda - En desarrollo
-        </div>
-      );
+      return <LazyAgendaView date={currentDate} />;
     case 'year':
-      return (
-        <div className='calendar-view year-view'>
-          Vista anual - En desarrollo
-        </div>
-      );
+      return <LazyYearView date={currentDate} />;
     default:
       return (
         <div className='calendar-view'>Vista no implementada: {activeView}</div>

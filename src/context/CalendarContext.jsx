@@ -43,94 +43,38 @@ export const CalendarProvider = ({
   // Usar las acciones base para evitar duplicación de código
   const actions = createCalendarActionsBase(dispatch);
 
-  // Crear acciones categorizadas para mejor organización
+  // Crear acciones categorizadas de forma más eficiente
   const categorizedActions = useMemo(() => {
-    // Acciones de configuración
+    // Acciones de configuración - simplificadas
     const configActions = {
       updateConfig: actions.updateConfig,
-      setLocale: useCallback(
-        locale => {
-          actions.updateConfig({ locale });
-        },
-        [actions.updateConfig]
-      ),
-      setFirstDayOfWeek: useCallback(
-        day => {
-          actions.updateConfig({ firstDayOfWeek: day });
-        },
-        [actions.updateConfig]
-      ),
-      setTheme: useCallback(
-        theme => {
-          actions.updateConfig({ theme });
-        },
-        [actions.updateConfig]
-      ),
-      toggleTheme: useCallback(() => {
+      setLocale: locale => actions.updateConfig({ locale }),
+      setFirstDayOfWeek: firstDayOfWeek =>
+        actions.updateConfig({ firstDayOfWeek }),
+      setTheme: theme => actions.updateConfig({ theme }),
+      toggleTheme: () => {
         const newTheme = state.config.theme === 'light' ? 'dark' : 'light';
         actions.updateConfig({ theme: newTheme });
-      }, [actions.updateConfig, state.config.theme]),
-      setTimeFormat: useCallback(
-        format => {
-          actions.updateConfig({ timeFormat: format });
-        },
-        [actions.updateConfig]
-      ),
-      setDateFormat: useCallback(
-        format => {
-          actions.updateConfig({ dateFormat: format });
-        },
-        [actions.updateConfig]
-      ),
+      },
+      setTimeFormat: timeFormat => actions.updateConfig({ timeFormat }),
+      setDateFormat: dateFormat => actions.updateConfig({ dateFormat }),
     };
 
-    // Acciones de navegación
+    // Acciones de navegación - simplificadas sin useCallback anidados
     const navigationActions = {
-      goToToday: useCallback(() => {
-        dateController.goToToday();
-      }, [dateController]),
-      nextMonth: useCallback(() => {
-        dateController.nextMonth();
-      }, [dateController]),
-      prevMonth: useCallback(() => {
-        dateController.prevMonth();
-      }, [dateController]),
-      nextYear: useCallback(() => {
-        dateController.nextYear();
-      }, [dateController]),
-      prevYear: useCallback(() => {
-        dateController.prevYear();
-      }, [dateController]),
-      nextWeek: useCallback(() => {
-        dateController.incrementDate(1, 'week');
-      }, [dateController]),
-      prevWeek: useCallback(() => {
-        dateController.incrementDate(-1, 'week');
-      }, [dateController]),
-      nextDay: useCallback(() => {
-        dateController.incrementDate(1, 'day');
-      }, [dateController]),
-      prevDay: useCallback(() => {
-        dateController.incrementDate(-1, 'day');
-      }, [dateController]),
-      setDate: useCallback(
-        date => {
-          dateController.setDate(date);
-        },
-        [dateController]
-      ),
-      gotoDate: useCallback(
-        date => {
-          dateController.gotoDate(date);
-        },
-        [dateController]
-      ),
-      incrementDate: useCallback(
-        (amount, unit) => {
-          dateController.incrementDate(amount, unit);
-        },
-        [dateController]
-      ),
+      goToToday: () => dateController.goToToday(),
+      nextMonth: () => dateController.nextMonth(),
+      prevMonth: () => dateController.prevMonth(),
+      nextYear: () => dateController.nextYear(),
+      prevYear: () => dateController.prevYear(),
+      nextWeek: () => dateController.incrementDate(1, 'week'),
+      prevWeek: () => dateController.incrementDate(-1, 'week'),
+      nextDay: () => dateController.incrementDate(1, 'day'),
+      prevDay: () => dateController.incrementDate(-1, 'day'),
+      setDate: date => dateController.setDate(date),
+      gotoDate: date => dateController.gotoDate(date),
+      incrementDate: (amount, unit) =>
+        dateController.incrementDate(amount, unit),
     };
 
     // Acciones de vista

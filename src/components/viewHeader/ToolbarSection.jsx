@@ -25,13 +25,12 @@ export const ToolbarSection = ({ section }) => {
     // Acciones categorizadas (nueva arquitectura)
     navigation,
     view,
-    // Acciones directas para compatibilidad
-    setActiveView,
   } = useCalendarContext();
 
   let formattedConfig = config.viewFormats[activeView] || {
     month: 'long',
   };
+  console.log(config);
 
   // Suscribirse a eventos específicos del calendario
   useEffect(() => {
