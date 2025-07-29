@@ -11,10 +11,12 @@
   --border-secondary: var(--secondary-border);
   --bg-button-primary: var(--button-primary);
   --bg-button-primary-hover: var(--button-primary-hover);
-  --bg-button-primary-focus: var(--button-primary-focus);
+  --bg-button-primary-focus: var(
+    --button-primary-hover
+  ); /* Usamos hover como fallback */
   --bg-button-primary-active: var(--button-primary-active);
   --bg-button-primary-disabled: var(--button-primary-disabled);
-  --bg-button-primary-shadow: var(--button-primary-shadow);
+  --bg-button-primary-shadow: rgba(38, 97, 156, 0.3); /* Valor directo */
   --success: var(--success-main);
   --success-secondary: var(--success-aux);
   --warning: var(--warning-main);
@@ -35,10 +37,10 @@
     --border-secondary: var(--secondary-border);
     --bg-button-primary: var(--button-primary);
     --bg-button-primary-hover: var(--button-primary-hover);
-    --bg-button-primary-focus: var(--button-primary-focus);
+    --bg-button-primary-focus: var(--button-primary-hover);
     --bg-button-primary-active: var(--button-primary-active);
     --bg-button-primary-disabled: var(--button-primary-disabled);
-    --bg-button-primary-shadow: var(--button-primary-shadow);
+    --bg-button-primary-shadow: rgba(38, 97, 156, 0.3);
     --success: var(--success-main);
     --success-secondary: var(--success-aux);
     --warning: var(--warning-main);
@@ -59,10 +61,10 @@
   --border-secondary: var(--secondary-border);
   --bg-button-primary: var(--button-primary);
   --bg-button-primary-hover: var(--button-primary-hover);
-  --bg-button-primary-focus: var(--button-primary-focus);
+  --bg-button-primary-focus: var(--button-primary-hover);
   --bg-button-primary-active: var(--button-primary-active);
   --bg-button-primary-disabled: var(--button-primary-disabled);
-  --bg-button-primary-shadow: var(--button-primary-shadow);
+  --bg-button-primary-shadow: rgba(38, 97, 156, 0.3);
   --success: var(--success-main);
   --success-secondary: var(--success-aux);
   --warning: var(--warning-main);
@@ -73,7 +75,8 @@
   --info-secondary: var(--info-aux);
 }
 
-/* @media (prefers-color-scheme: dark) {
+/* Tema dark para preferencia del sistema */
+@media (prefers-color-scheme: dark) {
   :root {
     --bg-primary: var(--primary-dark);
     --bg-secondary: var(--secondary-light);
@@ -83,10 +86,10 @@
     --border-secondary: var(--secondary-border);
     --bg-button-primary: var(--button-secondary);
     --bg-button-primary-hover: var(--button-secondary-hover);
-    --bg-button-primary-focus: var(--button-secondary-focus);
+    --bg-button-primary-focus: var(--button-secondary-hover);
     --bg-button-primary-active: var(--button-secondary-active);
-    --bg-button-primary-disabled: var(--button-secondary-disabled);
-    --bg-button-primary-shadow: var(--button-secondary-shadow);
+    --bg-button-primary-disabled: #1e40af;
+    --bg-button-primary-shadow: rgba(96, 165, 250, 0.4);
     --success: var(--success-aux);
     --success-secondary: var(--success-main);
     --warning: var(--warning-aux);
@@ -107,10 +110,10 @@
   --border-secondary: var(--secondary-border);
   --bg-button-primary: var(--button-secondary);
   --bg-button-primary-hover: var(--button-secondary-hover);
-  --bg-button-primary-focus: var(--button-secondary-focus);
+  --bg-button-primary-focus: var(--button-secondary-hover);
   --bg-button-primary-active: var(--button-secondary-active);
-  --bg-button-primary-disabled: var(--button-secondary-disabled);
-  --bg-button-primary-shadow: var(--button-secondary-shadow);
+  --bg-button-primary-disabled: #1e40af;
+  --bg-button-primary-shadow: rgba(96, 165, 250, 0.4);
   --success: var(--success-aux);
   --success-secondary: var(--success-main);
   --warning: var(--warning-aux);
@@ -119,4 +122,10 @@
   --error-secondary: var(--error-main);
   --info: var(--info-aux);
   --info-secondary: var(--info-main);
-} */
+
+  /* Overrides específicos para tema oscuro */
+  --calendar-bg: #1f2937;
+  --calendar-border: #374151;
+  --calendar-hover: #374151;
+  --calendar-selected: #1e40af;
+}

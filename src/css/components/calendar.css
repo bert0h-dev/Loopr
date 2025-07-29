@@ -1,4 +1,47 @@
+/* ========================================
+    CALENDAR MAIN COMPONENT
+   ======================================== */
+
 .calendar {
   max-width: 1200px;
   margin: 0 auto;
+  background: var(--calendar-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.calendar:hover {
+  box-shadow: var(--shadow-xl);
+}
+
+/* Container principal */
+.container {
+  padding: var(--space-xl);
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* Calendario responsive */
+@media (max-width: 768px) {
+  .calendar {
+    margin: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+
+  .container {
+    padding: var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar {
+    margin: var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+
+  .container {
+    padding: var(--space-sm);
+  }
 }

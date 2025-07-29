@@ -1,0 +1,92 @@
+/* ========================================================================================
+   Loading Spinner Component Styles
+   ======================================================================================== */
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  min-height: 200px;
+  gap: var(--spacing-sm);
+}
+
+.loading-spinner__icon {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+  border: 3px solid var(--color-border-light);
+  border-top: 3px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin var(--animation-duration-normal) linear infinite;
+}
+
+.loading-spinner__text {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Legacy spinner support */
+.spinner {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  border: 2px solid var(--color-border-light);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin var(--animation-duration-normal) linear infinite;
+}
+
+.loading-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+/* ========================================================================================
+   Animations
+   ======================================================================================== */
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================================================================
+   Size Variants
+   ======================================================================================== */
+
+.loading-spinner--small .loading-spinner__icon,
+.spinner.small {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+  border-width: 2px;
+}
+
+.loading-spinner--large .loading-spinner__icon,
+.spinner.large {
+  width: var(--icon-size-xl);
+  height: var(--icon-size-xl);
+  border-width: 4px;
+}
+
+/* ========================================================================================
+   Accessibility
+   ======================================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner__icon,
+  .spinner {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* Tema oscuro */
+[data-theme='dark'] .spinner {
+  border-color: var(--border-primary);
+  border-top-color: var(--bg-button-primary);
+}

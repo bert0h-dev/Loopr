@@ -1,12 +1,15 @@
-/* ========================================
-   MODERN MONTH VIEW
-   ======================================== */
+/* ========================================================================================
+   Month View - Modern Calendar Display
+   ======================================================================================== */
 
 .month-view {
-  background: white;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-
-  animation: monthViewSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-sm);
+  animation: monthViewSlideIn var(--animation-duration-normal)
+    var(--animation-ease);
 }
 
 @keyframes monthViewSlideIn {
@@ -20,14 +23,15 @@
   }
 }
 
-/* ========================================
-   WEEK DAYS HEADER
-   ======================================== */
+/* ========================================================================================
+   Week Days Header
+   ======================================================================================== */
 
 .month-week-days-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  border-bottom: 1px solid var(--primary-border);
+  background: var(--color-surface-secondary);
+  border-bottom: 1px solid var(--color-border);
   position: relative;
 }
 
@@ -42,22 +46,20 @@
 
 .month-week-day-name {
   text-align: center;
-  padding: var(--space-lg) var(--space-sm);
+  padding: var(--spacing-lg) var(--spacing-sm);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
+  color: var(--color-text-primary);
   cursor: default;
   user-select: none;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   position: relative;
-
-  /* Subtle hover effect */
-  transition: all var(--transition-fast);
+  transition: color var(--animation-duration-fast) var(--animation-ease);
 }
 
 .month-week-day-name.weekend {
-  color: var(--error);
+  color: var(--color-error);
   font-weight: var(--font-weight-bold);
 }
 
@@ -68,7 +70,8 @@
   left: 50%;
   width: 0;
   height: 2px;
-  transition: all var(--transition-fast);
+  background: var(--color-primary);
+  transition: width var(--animation-duration-fast) var(--animation-ease);
   transform: translateX(-50%);
 }
 
@@ -83,22 +86,22 @@
 .month-days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: var(--bg-secondary);
+  background: var(--color-border);
   gap: 1px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
 }
 
 .month-day-cell {
   height: 120px;
-  background: var(--bg-secondary);
+  background: var(--color-surface);
   cursor: pointer;
   font-weight: var(--font-weight-medium);
-  padding: var(--space-md);
+  padding: var(--spacing-md);
   position: relative;
   display: flex;
   flex-direction: column;
-  transition: all var(--transition-fast);
-
-  /* Modern cell design */
+  transition: all var(--animation-duration-fast) var(--animation-ease);
   border-radius: 0;
   overflow: hidden;
 }
@@ -116,10 +119,9 @@
 }
 
 .month-day-cell:hover {
+  background: var(--color-surface-secondary);
   transform: translateY(-2px);
-  box-shadow:
-    0 8px 25px rgba(0, 0, 0, 0.1),
-    0 0 0 1px var(--bg-primary);
+  box-shadow: var(--shadow-lg);
   z-index: 2;
 }
 
@@ -129,9 +131,7 @@
 
 .month-day-cell:active {
   transform: translateY(0);
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.1),
-    0 0 0 1px var(--bg-primary);
+  box-shadow: var(--shadow-md);
 }
 
 /* ========================================
@@ -143,27 +143,28 @@
   user-select: none;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
-  color: var(--text-secondary);
+  color: var(--color-text-secondary);
   z-index: 1;
   position: relative;
   cursor: default;
   user-select: none;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
 
   /* Circular background for day numbers */
-  width: 32px;
-  height: 32px;
+  width: var(--calendar-cell-size);
+  height: var(--calendar-cell-size);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
-  transition: all var(--transition-fast);
+  transition: all var(--animation-duration-fast) var(--animation-ease);
 }
 
 .month-day-cell:hover .month-day-number {
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--text-primary);
-  transform: scale(1.1);
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ========================================
@@ -171,35 +172,26 @@
    ======================================== */
 
 .month-day-cell.weekend .month-day-number {
-  color: var(--error);
+  color: var(--color-error);
   font-weight: var(--font-weight-bold);
 }
 
 .month-day-cell.weekend:hover {
-  box-shadow:
-    0 8px 25px var(--error-secondary),
-    0 0 0 1px var(--error-secondary);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-error);
 }
 
 .month-day-cell.today {
-  background: linear-gradient(
-    135deg,
-    var(--bg-button-primary) 0%,
-    var(--bg-button-primary-active) 100%
-  );
-  border: 2px solid var(--primary-400);
-  box-shadow:
-    0 0 0 3px var(--bg-button-primary-shadow),
-    var(--shadow-md);
+  background: var(--color-primary-light);
+  border: 2px solid var(--color-primary);
+  box-shadow: var(--shadow-md), var(--focus-ring);
 }
 
 .month-day-cell.today .month-day-number {
-  background: var(--success);
-  color: white;
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
   font-weight: var(--font-weight-bold);
   box-shadow: var(--shadow-sm);
-
-  /* Pulsing animation */
   animation: todayPulse 2s infinite;
 }
 
@@ -216,30 +208,28 @@
 }
 
 .month-day-cell.today:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 12px 30px var(--bg-button-primary-active),
-    0 0 0 3px var(--bg-button-primary-shadow);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .month-day-cell.today:hover .month-day-number {
-  background: var(--text-secondary);
-  color: var(--text-primary);
-  transform: scale(1.15);
+  background: var(--color-primary-hover);
+  color: var(--color-text-inverse);
+  transform: scale(1.1);
 }
 
 .month-day-cell.outside-month {
-  background: var(--bg-primary);
-  opacity: 0.6;
+  background: var(--color-surface-secondary);
+  opacity: 0.5;
 }
 
 .month-day-cell.outside-month .month-day-number {
-  color: var(--text-primary);
+  color: var(--color-text-tertiary);
   font-weight: var(--font-weight-normal);
 }
 
 .month-day-cell.outside-month:hover {
-  background-color: unset;
+  background-color: var(--color-surface-secondary);
   transform: none;
   box-shadow: none;
   cursor: default;
@@ -247,7 +237,7 @@
 
 .month-day-cell.outside-month:hover .month-day-number {
   background: none;
-  color: var(--text-secondary);
+  color: var(--color-text-tertiary);
   transform: none;
 }
 
@@ -287,7 +277,7 @@
 
   .month-day-cell:hover {
     transform: none;
-    box-shadow: 0 0 0 1px var(--bg-primary);
+    box-shadow: 0 0 0 1px var(--color-border);
   }
 }
 
