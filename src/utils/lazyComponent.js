@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'preact/compat';
 import { h } from 'preact';
+import { lazy, Suspense } from 'preact/compat';
 
 /**
  * @name createLazyComponent

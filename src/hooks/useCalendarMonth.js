@@ -1,10 +1,24 @@
 import { useMemo } from 'preact/hooks';
+// Importar funciones específicas de date-fns
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
+  endOfWeek,
+  eachDayOfInterval,
+  format,
+  isToday,
+  isSameMonth,
+  isWeekend,
+} from 'date-fns';
+import { es } from 'date-fns/locale';
 
 /**
  * @name useCalendarMonth
  * @summary
  * Obtiene todos los días visibles en la vista de calendario mensual
  * Incluye días del mes anterior y siguiente para completar las semanas
+ * MEJORADO con date-fns para mayor confiabilidad y rendimiento
  *
  * @param {Object} options - Opciones de configuración
  * @param {Date} [options.currentDate=new Date()] - Fecha del mes a mostrar
@@ -31,43 +45,33 @@ export function useCalendarMonth(
   locale = 'es-MX'
 ) {
   return useMemo(() => {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+    try {
+      // Usar date-fns para calcular rangos de manera más confiable
+      const monthStart = startOfMonth(currentDate);
+      const monthEnd = endOfMonth(currentDate);
 
-    // Día 1 del mes
-    const primerDiaMes = new Date(year, month, 1);
-    const ultimoDiaMes = new Date(year, month + 1, 0);
+      // Obtener el rango completo de semanas para el calendario
+      const calendarStart = startOfWeek(monthStart, { weekStartsOn: weekDay });
+      const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: weekDay });
 
-    // Calcular inicio de la grilla (inicio de la semana que contiene el primer día del mes)
-    const diaInicio = primerDiaMes.getDay(); //0-6
-    const diffInicio = (diaInicio - weekDay + 7) % 7;
-    const inicioGrilla = new Date(primerDiaMes);
-    inicioGrilla.setDate(primerDiaMes.getDate() - diffInicio);
+      // Generar todos los días del rango usando date-fns
+      const allDays = eachDayOfInterval({
+        start: calendarStart,
+        end: calendarEnd,
+      });
 
-    // Calcular fin de grilla (final de la semana que contiene el último día del mes)
-    const diaFin = ultimoDiaMes.getDay(); //0-6
-    const diffFin = (weekDay + 6 - diaFin + 7) % 7;
-    const finGrilla = new Date(ultimoDiaMes);
-    finGrilla.setDate(ultimoDiaMes.getDate() + diffFin);
-
-    const dias = [];
-    const cursor = new Date(inicioGrilla);
-
-    while (cursor <= finGrilla) {
-      const dia = {
-        date: new Date(cursor),
-        numberDay: new Intl.DateTimeFormat(locale, { day: '2-digit' }).format(
-          new Date(cursor)
-        ),
-        isToday: cursor.toDateString() === new Date().toDateString(),
-        isWeekend: cursor.getDay() === 0 || cursor.getDay() === 6,
-        isInCurrentMonth: cursor.getMonth() === month,
-      };
-
-      dias.push(dia);
-      cursor.setDate(cursor.getDate() + 1);
+      // Mapear a la estructura existente (mantiene compatibilidad 100%)
+      return allDays.map(date => ({
+        date,
+        numberDay: format(date, 'dd', { locale: es }),
+        isToday: isToday(date),
+        isWeekend: isWeekend(date),
+        isInCurrentMonth: isSameMonth(date, currentDate),
+      }));
+    } catch (error) {
+      console.error('Error en useCalendarMonth:', error);
+      // Fallback: retornar array vacío en caso de error
+      return [];
     }
-
-    return dias;
   }, [currentDate, weekDay, locale]);
 }

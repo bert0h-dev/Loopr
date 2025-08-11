@@ -1,10 +1,14 @@
 import { useMemo } from 'preact/hooks';
+// Importar funciones específicas de date-fns
+import { getWeek, format, isValid } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 /**
  * @name getWeekNumber
  * @summary
  * Calcula el número de semana del año para una fecha dada
  * Usa el estándar ISO 8601 donde la semana 1 es la primera semana que contiene el 4 de enero
+ * MEJORADO con date-fns para mayor confiabilidad
  *
  * @param {Date} date - Fecha para calcular el número de semana
  * @returns {number} Número de semana del año (1-53)
@@ -14,25 +18,26 @@ import { useMemo } from 'preact/hooks';
  * console.log(weekNumber); // 3
  */
 export function getWeekNumber(date) {
-  // Crear una copia de la fecha para no modificar la original
-  const targetDate = new Date(date.getTime());
+  try {
+    // Validar entrada con date-fns
+    if (!isValid(date)) {
+      console.warn('getWeekNumber: fecha inválida proporcionada');
+      return 1;
+    }
 
-  // Ajustar para el jueves de la misma semana (ISO 8601)
-  targetDate.setDate(targetDate.getDate() + 4 - (targetDate.getDay() || 7));
-
-  // Obtener el primer día del año
-  const yearStart = new Date(targetDate.getFullYear(), 0, 1);
-
-  // Calcular el número de semana
-  const weekNumber = Math.ceil(((targetDate - yearStart) / 86400000 + 1) / 7);
-
-  return weekNumber;
+    // Usar date-fns para cálculo ISO 8601 confiable
+    return getWeek(date, { weekStartsOn: 1 }); // ISO 8601: semana empieza en lunes
+  } catch (error) {
+    console.error('Error al calcular número de semana:', error);
+    return 1;
+  }
 }
 
 /**
  * @name getWeekNumbers
  * @summary
  * Obtiene los números de semana para un array de días del calendario
+ * MEJORADO con validación adicional
  *
  * @param {Array<Object>} monthCalendarDays - Array de días del calendario
  * @param {number} weekDay - Primer día de la semana (0=Domingo, 1=Lunes)
@@ -43,12 +48,19 @@ export function getWeekNumber(date) {
  * console.log(weekNumbers); // [4, 5, 6, 7, 8]
  */
 export function getWeekNumbers(monthCalendarDays, weekDay = 0) {
+  // Validación de entrada mejorada
+  if (!Array.isArray(monthCalendarDays)) {
+    console.warn('getWeekNumbers: monthCalendarDays debe ser un array');
+    return [];
+  }
+
   const weekNumbers = [];
 
   // Agrupar los días por semanas (cada 7 días)
   for (let i = 0; i < monthCalendarDays.length; i += 7) {
     const firstDayOfWeek = monthCalendarDays[i];
-    if (firstDayOfWeek) {
+    // Validación mejorada con date-fns
+    if (firstDayOfWeek?.date && isValid(firstDayOfWeek.date)) {
       const weekNumber = getWeekNumber(firstDayOfWeek.date);
       weekNumbers.push(weekNumber);
     }
@@ -66,6 +78,7 @@ export function getWeekNumbers(monthCalendarDays, weekDay = 0) {
  * @name getWeekDays
  * @summary
  * Obtiene los nombres de los días de la semana en diferentes formatos
+ * MEJORADO con date-fns para mejor formateo y confiabilidad
  *
  * @param {Object} options - Opciones de configuración
  * @param {number} [options.weekDay=0] - Primer día de la semana (0=Domingo, 1=Lunes, ..., 6=Sábado)
@@ -88,42 +101,40 @@ export function getWeekNumbers(monthCalendarDays, weekDay = 0) {
  */
 export function getWeekDays(weekDay = 0, locale = 'es-MX') {
   return useMemo(() => {
-    // Validar que weekDay esté entre 0-6
-    if (weekDay < 0 || weekDay > 6) {
-      throw new Error('weekDay debe estar entre 0 (domingo) y 6 (sábado)');
+    try {
+      // Validar que weekDay esté entre 0-6
+      if (weekDay < 0 || weekDay > 6) {
+        throw new Error('weekDay debe estar entre 0 (domingo) y 6 (sábado)');
+      }
+
+      const dias = [];
+
+      // Generamos los días de la semana empezando desde el primer día especificado
+      for (let i = 0; i < 7; i++) {
+        const diaIndex = (weekDay + i) % 7;
+
+        // Crear una fecha base para obtener los nombres localizados
+        const fechaBase = new Date(2024, 0, 7 + diaIndex); // Semana que empieza en domingo
+
+        // Usar date-fns para formateo más confiable
+        const nombre = format(fechaBase, 'EEEE', { locale: es });
+        const abreviatura = format(fechaBase, 'EEE', { locale: es });
+        const narrow = format(fechaBase, 'EEEEEE', { locale: es });
+
+        dias.push({
+          index: diaIndex,
+          name: nombre.charAt(0).toUpperCase() + nombre.slice(1),
+          abbreviation:
+            abreviatura.charAt(0).toUpperCase() + abreviatura.slice(1),
+          narrow: narrow.charAt(0).toUpperCase() + narrow.slice(1),
+          isWeekend: diaIndex === 0 || diaIndex === 6,
+        });
+      }
+
+      return dias;
+    } catch (error) {
+      console.error('Error en getWeekDays:', error);
+      return [];
     }
-
-    const dias = [];
-
-    // Generamos los días de la semana empezando desde el primer día especificado
-    for (let i = 0; i < 7; i++) {
-      const diaIndex = (weekDay + i) % 7;
-
-      // Crear una fecha base para obtener los nombres localizados
-      const fechaBase = new Date(2024, 0, 7 + diaIndex); // Semana que empieza en domingo
-
-      const nombre = new Intl.DateTimeFormat(locale, {
-        weekday: 'long',
-      }).format(fechaBase);
-
-      const abreviatura = new Intl.DateTimeFormat(locale, {
-        weekday: 'short',
-      }).format(fechaBase);
-
-      const narrow = new Intl.DateTimeFormat(locale, {
-        weekday: 'narrow',
-      }).format(fechaBase);
-
-      dias.push({
-        index: diaIndex,
-        name: nombre.charAt(0).toUpperCase() + nombre.slice(1),
-        abbreviation:
-          abreviatura.charAt(0).toUpperCase() + abreviatura.slice(1),
-        narrow: narrow.charAt(0).toUpperCase() + narrow.slice(1),
-        isWeekend: diaIndex === 0 || diaIndex === 6,
-      });
-    }
-
-    return dias;
   }, [weekDay, locale]);
 }

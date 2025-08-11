@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
 import { getWeekNumbers } from '@/utils/dateUtils.js';
+import { format } from 'date-fns';
 
 /**
  * @name MonthDay
@@ -59,7 +60,7 @@ export const MonthDays = memo(
         // Días de la semana
         ...weekDays.map((day, dayIndex) => (
           <MonthDay
-            key={`${day.date.getTime()}-${weekIndex}-${dayIndex}`}
+            key={`${format(day.date, 'yyyy-MM-dd')}-${weekIndex}-${dayIndex}`}
             day={day}
             index={weekIndex * 7 + dayIndex}
           />

@@ -1,4 +1,13 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
+// Importar funciones específicas de date-fns para navegación segura
+import {
+  addMonths,
+  addYears,
+  addDays,
+  addWeeks,
+  isValid,
+  parseISO,
+} from 'date-fns';
 
 /**
  * @name useCalendarController
@@ -73,34 +82,57 @@ import { useEffect, useRef, useState } from 'preact/hooks';
  * controller.incrementDate(1, 'years'); // Avanzar un año
  */
 export function useCalendarController(defaultDate = new Date()) {
-  // Validar y sanitizar defaultDate
+  // Validar y sanitizar defaultDate usando date-fns
   const validateDate = date => {
     if (!date) return new Date();
-    if (!(date instanceof Date)) {
+
+    // Si es string, intentar parsearlo como ISO
+    if (typeof date === 'string') {
       try {
-        const parsedDate = new Date(date);
-        if (isNaN(parsedDate.getTime())) {
-          console.warn(
-            'useCalendarController: defaultDate inválida, usando fecha actual'
-          );
-          return new Date();
+        const parsedDate = parseISO(date);
+        if (isValid(parsedDate)) {
+          return parsedDate;
         }
-        return parsedDate;
+        // Si no es ISO válido, intentar constructor nativo
+        const fallbackDate = new Date(date);
+        if (isValid(fallbackDate)) {
+          return fallbackDate;
+        }
       } catch (error) {
         console.warn(
-          'useCalendarController: Error al parsear defaultDate, usando fecha actual',
+          'useCalendarController: Error al parsear string date, usando fecha actual',
           error
         );
         return new Date();
       }
     }
-    if (isNaN(date.getTime())) {
-      console.warn(
-        'useCalendarController: defaultDate inválida, usando fecha actual'
-      );
-      return new Date();
+
+    // Si es objeto Date, validar con date-fns
+    if (date instanceof Date) {
+      if (isValid(date)) {
+        return date;
+      } else {
+        console.warn(
+          'useCalendarController: Date inválida, usando fecha actual'
+        );
+        return new Date();
+      }
     }
-    return date;
+
+    // Para otros tipos, intentar crear Date y validar
+    try {
+      const newDate = new Date(date);
+      if (isValid(newDate)) {
+        return newDate;
+      }
+    } catch (error) {
+      console.warn(
+        'useCalendarController: Error al crear Date, usando fecha actual',
+        error
+      );
+    }
+
+    return new Date();
   };
 
   const [currentDate, setCurrentDate] = useState(() =>
@@ -173,13 +205,13 @@ export function useCalendarController(defaultDate = new Date()) {
     nextMonth: () => {
       try {
         setCurrentDate(prev => {
-          const newDate = new Date(prev);
-          newDate.setMonth(newDate.getMonth() + 1);
+          // Usar date-fns para navegación segura de mes
+          const newDate = addMonths(prev, 1);
 
-          // Validar que la nueva fecha sea válida
-          if (isNaN(newDate.getTime())) {
+          // date-fns garantiza fechas válidas, pero validar por seguridad
+          if (!isValid(newDate)) {
             console.error('Error: fecha inválida generada en nextMonth');
-            return prev; // Retornar fecha anterior si hay error
+            return prev;
           }
 
           emit('nextMonth', { current: newDate, previous: prev });
@@ -192,13 +224,13 @@ export function useCalendarController(defaultDate = new Date()) {
     prevMonth: () => {
       try {
         setCurrentDate(prev => {
-          const newDate = new Date(prev);
-          newDate.setMonth(newDate.getMonth() - 1);
+          // Usar date-fns para navegación segura de mes
+          const newDate = addMonths(prev, -1);
 
-          // Validar que la nueva fecha sea válida
-          if (isNaN(newDate.getTime())) {
+          // date-fns garantiza fechas válidas, pero validar por seguridad
+          if (!isValid(newDate)) {
             console.error('Error: fecha inválida generada en prevMonth');
-            return prev; // Retornar fecha anterior si hay error
+            return prev;
           }
 
           emit('prevMonth', { current: newDate, previous: prev });
@@ -211,13 +243,13 @@ export function useCalendarController(defaultDate = new Date()) {
     nextYear: () => {
       try {
         setCurrentDate(prev => {
-          const newDate = new Date(prev);
-          newDate.setFullYear(newDate.getFullYear() + 1);
+          // Usar date-fns para navegación segura de año
+          const newDate = addYears(prev, 1);
 
-          // Validar que la nueva fecha sea válida
-          if (isNaN(newDate.getTime())) {
+          // date-fns garantiza fechas válidas, pero validar por seguridad
+          if (!isValid(newDate)) {
             console.error('Error: fecha inválida generada en nextYear');
-            return prev; // Retornar fecha anterior si hay error
+            return prev;
           }
 
           emit('nextYear', { current: newDate, previous: prev });
@@ -230,13 +262,13 @@ export function useCalendarController(defaultDate = new Date()) {
     prevYear: () => {
       try {
         setCurrentDate(prev => {
-          const newDate = new Date(prev);
-          newDate.setFullYear(newDate.getFullYear() - 1);
+          // Usar date-fns para navegación segura de año
+          const newDate = addYears(prev, -1);
 
-          // Validar que la nueva fecha sea válida
-          if (isNaN(newDate.getTime())) {
+          // date-fns garantiza fechas válidas, pero validar por seguridad
+          if (!isValid(newDate)) {
             console.error('Error: fecha inválida generada en prevYear');
-            return prev; // Retornar fecha anterior si hay error
+            return prev;
           }
 
           emit('prevYear', { current: newDate, previous: prev });
@@ -251,9 +283,9 @@ export function useCalendarController(defaultDate = new Date()) {
         const prevDate = currentDate;
         const today = new Date();
 
-        // Validar que la fecha de hoy sea válida (por si acaso)
-        if (isNaN(today.getTime())) {
-          console.error('Error: no se pudo obtener la fecha actual');
+        // Validar con date-fns que la fecha de hoy sea válida
+        if (!isValid(today)) {
+          console.error('Error: no se pudo obtener la fecha actual válida');
           return;
         }
 
@@ -304,40 +336,52 @@ export function useCalendarController(defaultDate = new Date()) {
         return;
       }
 
-      if (!['days', 'months', 'years'].includes(unit)) {
+      // Mapear unidades a funciones de date-fns
+      const unitMap = {
+        days: addDays,
+        day: addDays,
+        weeks: addWeeks,
+        week: addWeeks,
+        months: addMonths,
+        month: addMonths,
+        years: addYears,
+        year: addYears,
+      };
+
+      const dateFnsFunction = unitMap[unit];
+      if (!dateFnsFunction) {
         console.warn(
-          'incrementDate: unit debe ser "days", "months" o "years":',
+          'incrementDate: unit debe ser "days", "weeks", "months" o "years":',
           unit
         );
         return;
       }
 
       setCurrentDate(prev => {
-        const newDate = new Date(prev);
+        try {
+          // Usar date-fns para cálculos seguros
+          const newDate = dateFnsFunction(prev, amount);
 
-        // Aplicar incremento según la unidad
-        switch (unit) {
-          case 'days':
-            newDate.setDate(newDate.getDate() + amount);
-            break;
-          case 'months':
-            newDate.setMonth(newDate.getMonth() + amount);
-            break;
-          case 'years':
-            newDate.setFullYear(newDate.getFullYear() + amount);
-            break;
+          // Validar resultado con date-fns
+          if (!isValid(newDate)) {
+            console.error('Error: fecha inválida generada en incrementDate');
+            return prev;
+          }
+
+          // Emitir evento con información detallada
+          emit('incrementDate', {
+            current: newDate,
+            previous: prev,
+            amount, // Cantidad incrementada
+            unit, // Unidad usada
+            direction: amount > 0 ? 'forward' : 'backward', // Dirección para animaciones
+          });
+
+          return newDate;
+        } catch (error) {
+          console.error('Error en incrementDate:', error);
+          return prev;
         }
-
-        // Emitir evento con información detallada
-        emit('incrementDate', {
-          current: newDate,
-          previous: prev,
-          amount, // Cantidad incrementada
-          unit, // Unidad usada
-          direction: amount > 0 ? 'forward' : 'backward', // Dirección para animaciones
-        });
-
-        return newDate;
       });
     },
     // Sistema de suscripción mejorado

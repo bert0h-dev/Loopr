@@ -5,7 +5,7 @@ import { useCallback } from 'preact/hooks';
  * @param {Function} dispatch - Función dispatch del reducer
  * @returns {Object} Objeto con todas las acciones base del calendario
  */
-const createCalendarActionsBase = dispatch => {
+export const createCalendarActionsBase = dispatch => {
   // Función para generar ID único para eventos
   const generateEventId = () => {
     return `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -233,7 +233,7 @@ const createCalendarActionsBase = dispatch => {
  * @param {Object} state - Estado actual del calendario
  * @returns {Object} Objeto con acciones organizadas por categorías
  */
-const createCategorizedActions = (dispatch, dateController, state) => {
+export const createCategorizedActions = (dispatch, dateController, state) => {
   const baseActions = createCalendarActionsBase(dispatch);
 
   // Acciones de configuración
@@ -397,62 +397,11 @@ const createCategorizedActions = (dispatch, dateController, state) => {
   };
 
   return {
-    // Acciones categorizadas
     config: configActions,
     navigation: navigationActions,
     view: viewActions,
     events: eventActions,
     ui: uiActions,
-
-    // API plana para compatibilidad con acciones base
     ...baseActions,
-
-    // Acciones de conveniencia (API plana)
-    setLocale: configActions.setLocale,
-    setFirstDayOfWeek: configActions.setFirstDayOfWeek,
-    setTheme: configActions.setTheme,
-    toggleTheme: configActions.toggleTheme,
-    setTimeFormat: configActions.setTimeFormat,
-    setDateFormat: configActions.setDateFormat,
-    goToToday: navigationActions.goToToday,
-    nextMonth: navigationActions.nextMonth,
-    prevMonth: navigationActions.prevMonth,
-    nextYear: navigationActions.nextYear,
-    prevYear: navigationActions.prevYear,
-    nextWeek: navigationActions.nextWeek,
-    prevWeek: navigationActions.prevWeek,
-    nextDay: navigationActions.nextDay,
-    prevDay: navigationActions.prevDay,
-    showMonthView: viewActions.showMonthView,
-    showWeekView: viewActions.showWeekView,
-    showDayView: viewActions.showDayView,
-    showAgendaView: viewActions.showAgendaView,
-    showYearView: viewActions.showYearView,
-    clearSelectedEvents: eventActions.clearSelectedEvents,
-    selectEvent: eventActions.selectEvent,
-    toggleSidebar: uiActions.toggleSidebar,
-    setSidebarOpen: uiActions.setSidebarOpen,
   };
 };
-
-/**
- * @name useCalendarActions
- * @summary
- * Hook unificado que contiene tanto las acciones base como la API organizada por categorías
- *
- * @param {Function} dispatch - Opcional: función dispatch para generar acciones base
- * @returns {Object} Objeto con acciones base y organizadas por categoría
- */
-export const useCalendarActions = (dispatch = null) => {
-  // Si se proporciona dispatch, generar acciones base (uso en contexto)
-  if (dispatch) {
-    return createCalendarActionsBase(dispatch);
-  }
-
-  throw new Error(
-    'useCalendarActions requiere un dispatch. Para uso en componentes, usar useCalendarContext() directamente.'
-  );
-};
-
-// Exportar también las funciones de creación de acciones para uso del contexto
-export { createCalendarActionsBase, createCategorizedActions };

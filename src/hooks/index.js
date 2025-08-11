@@ -1,5 +1,5 @@
 // Exportación centralizada de todos los hooks del calendario
-export { useCalendarActions } from './useCalendarActions.js';
+export { createCategorizedActions } from './useCalendarActions.js';
 export { useCalendarTaskManager } from './useCalendarTaskManager.js';
 export { useCalendarConfig } from './useCalendarConfig.js';
 export { useCalendarController } from './useCalendarController.js';

@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/bert0h-dev/Loopr#readme",
   "dependencies": {
+    "date-fns": "^4.1.0",
     "preact": "^10.26.9"
   },
   "devDependencies": {

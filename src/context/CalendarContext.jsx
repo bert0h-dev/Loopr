@@ -1,9 +1,10 @@
 import { h, createContext } from 'preact';
-import { useContext, useReducer, useCallback, useMemo } from 'preact/hooks';
+import { useContext, useReducer, useMemo } from 'preact/hooks';
+import { useDateFnsLocaleController } from '@/hooks/useDateFnsLocaleController.js';
 import { useCalendarReducer } from '@/hooks/useCalendarReducer.js';
-import { initialConfig as initialState } from '@/config/initialConfig.js';
 import { useCalendarController } from '@/hooks/useCalendarController.js';
-import { createCalendarActionsBase } from '@/hooks/useCalendarActions.js';
+import { createCategorizedActions } from '@/hooks/useCalendarActions.js';
+import { initialConfig as initialState } from '@/config/initialConfig.js';
 
 /**
  * @name CalendarContext
@@ -40,190 +41,40 @@ export const CalendarProvider = ({
   // Hook del controlador de fechas
   const [currentDate, dateController] = useCalendarController();
 
-  // Usar las acciones base para evitar duplicación de código
-  const actions = createCalendarActionsBase(dispatch);
+  // Usar el hook para obtener el objeto locale de date-fns según el config
+  const dateFnsLocale = useDateFnsLocaleController(
+    state.config?.locale || 'es'
+  );
 
-  // Crear acciones categorizadas de forma más eficiente
-  const categorizedActions = useMemo(() => {
-    // Acciones de configuración - simplificadas
-    const configActions = {
-      updateConfig: actions.updateConfig,
-      setLocale: locale => actions.updateConfig({ locale }),
-      setFirstDayOfWeek: firstDayOfWeek =>
-        actions.updateConfig({ firstDayOfWeek }),
-      setTheme: theme => actions.updateConfig({ theme }),
-      toggleTheme: () => {
-        const newTheme = state.config.theme === 'light' ? 'dark' : 'light';
-        actions.updateConfig({ theme: newTheme });
-      },
-      setTimeFormat: timeFormat => actions.updateConfig({ timeFormat }),
-      setDateFormat: dateFormat => actions.updateConfig({ dateFormat }),
-    };
-
-    // Acciones de navegación - simplificadas sin useCallback anidados
-    const navigationActions = {
-      goToToday: () => dateController.goToToday(),
-      nextMonth: () => dateController.nextMonth(),
-      prevMonth: () => dateController.prevMonth(),
-      nextYear: () => dateController.nextYear(),
-      prevYear: () => dateController.prevYear(),
-      nextWeek: () => dateController.incrementDate(1, 'week'),
-      prevWeek: () => dateController.incrementDate(-1, 'week'),
-      nextDay: () => dateController.incrementDate(1, 'day'),
-      prevDay: () => dateController.incrementDate(-1, 'day'),
-      setDate: date => dateController.setDate(date),
-      gotoDate: date => dateController.gotoDate(date),
-      incrementDate: (amount, unit) =>
-        dateController.incrementDate(amount, unit),
-    };
-
-    // Acciones de vista
-    const viewActions = {
-      setActiveView: actions.setActiveView,
-      showMonthView: useCallback(() => {
-        actions.setActiveView('month');
-      }, [actions.setActiveView]),
-      showWeekView: useCallback(() => {
-        actions.setActiveView('week');
-      }, [actions.setActiveView]),
-      showDayView: useCallback(() => {
-        actions.setActiveView('day');
-      }, [actions.setActiveView]),
-      showAgendaView: useCallback(() => {
-        actions.setActiveView('agenda');
-      }, [actions.setActiveView]),
-      showYearView: useCallback(() => {
-        actions.setActiveView('year');
-      }, [actions.setActiveView]),
-    };
-
-    // Acciones de eventos (con promesas para manejo de errores)
-    const eventActions = {
-      setEvents: actions.setEvents,
-      addEvent: useCallback(
-        event => {
-          return new Promise((resolve, reject) => {
-            try {
-              const result = actions.addEvent(event);
-              resolve(result || event);
-            } catch (error) {
-              actions.setError(`Error al agregar evento: ${error.message}`);
-              reject(error);
-            }
-          });
-        },
-        [actions.addEvent, actions.setError]
-      ),
-      updateEvent: useCallback(
-        (eventId, updates) => {
-          return new Promise((resolve, reject) => {
-            try {
-              const result = actions.updateEvent(eventId, updates);
-              resolve(result || { id: eventId, ...updates });
-            } catch (error) {
-              actions.setError(`Error al actualizar evento: ${error.message}`);
-              reject(error);
-            }
-          });
-        },
-        [actions.updateEvent, actions.setError]
-      ),
-      deleteEvent: useCallback(
-        eventId => {
-          return new Promise((resolve, reject) => {
-            try {
-              const result = actions.deleteEvent(eventId);
-              resolve(result || eventId);
-            } catch (error) {
-              actions.setError(`Error al eliminar evento: ${error.message}`);
-              reject(error);
-            }
-          });
-        },
-        [actions.deleteEvent, actions.setError]
-      ),
-      setSelectedEvents: actions.setSelectedEvents,
-      clearSelectedEvents: useCallback(() => {
-        actions.setSelectedEvents([]);
-      }, [actions.setSelectedEvents]),
-      selectEvent: useCallback(
-        event => {
-          const currentSelected = state.selectedEvents || [];
-          const isAlreadySelected = currentSelected.some(
-            e => e.id === event.id
-          );
-
-          if (isAlreadySelected) {
-            actions.setSelectedEvents(
-              currentSelected.filter(e => e.id !== event.id)
-            );
-          } else {
-            actions.setSelectedEvents([...currentSelected, event]);
-          }
-        },
-        [actions.setSelectedEvents, state.selectedEvents]
-      ),
-    };
-
-    // Acciones de UI
-    const uiActions = {
-      setUIState: actions.setUIState,
-      openEventModal: actions.openEventModal,
-      closeEventModal: actions.closeEventModal,
-      setError: actions.setError,
-      clearError: actions.clearError,
-      setLoading: actions.setLoading,
-      toggleSidebar: useCallback(() => {
-        actions.setUIState(prev => ({
-          ...prev,
-          sidebarOpen: !prev.sidebarOpen,
-        }));
-      }, [actions.setUIState]),
-      setSidebarOpen: useCallback(
-        open => {
-          actions.setUIState(prev => ({
-            ...prev,
-            sidebarOpen: open,
-          }));
-        },
-        [actions.setUIState]
-      ),
-    };
-
-    return {
-      config: configActions,
-      navigation: navigationActions,
-      view: viewActions,
-      events: eventActions,
-      ui: uiActions,
-    };
-  }, [actions, dateController, state.config.theme, state.selectedEvents]);
+  // Crear acciones categorizadas usando el dispatch y el controlador de fechas
+  const actionsBase = createCategorizedActions(dispatch, dateController, state);
 
   // Valor del contexto optimizado con memoización
   const contextValue = useMemo(
     () => ({
       // Estado del calendario (incluye state.config con la configuración)
       ...state,
+
+      // Fecha actual y controlador de fechas
       currentDate,
 
       // Controlador de fechas
       dateController,
 
-      // Acciones base (mantener para compatibilidad)
-      ...actions,
+      // Acciones categorizadas
+      configActions: actionsBase.config,
+      navigation: actionsBase.navigation,
+      view: actionsBase.view,
+      events: actionsBase.events,
+      ui: actionsBase.ui,
 
-      // Acciones categorizadas (nueva API)
-      // NOTA: configActions son las ACCIONES, state.config es la CONFIGURACIÓN
-      configActions: categorizedActions.config,
-      navigation: categorizedActions.navigation,
-      view: categorizedActions.view,
-      events: categorizedActions.events,
-      ui: categorizedActions.ui,
+      // Locale de date-fns resuelto según config
+      dateFnsLocale,
 
       // Métodos de utilidad adicionales
       utils: {
         // Generar ID único para eventos
-        generateEventId: actions.generateEventId,
+        generateEventId: actionsBase.generateEventId,
 
         // Validar evento
         validateEvent: event => {
@@ -265,21 +116,8 @@ export const CalendarProvider = ({
         // Verificar si está cargando
         isLoading: () => !!state.ui?.loading,
       },
-
-      // Información del contexto para debugging
-      _contextInfo: {
-        version: '2.0.0',
-        features: [
-          'enhanced-actions',
-          'error-handling',
-          'validation',
-          'utilities',
-          'hooks-integration',
-        ],
-        lastUpdate: new Date().toISOString(),
-      },
     }),
-    [state, currentDate, dateController, actions, categorizedActions]
+    [state, currentDate, dateController, actionsBase, dateFnsLocale]
   );
 
   return (
