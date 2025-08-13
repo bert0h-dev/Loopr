@@ -1,3 +1,710 @@
-@import './utilities/_index.css';
-@import './base/_index.css';
-@import './components/_index.css';
+/**
+ * 🎨 CSS Principal - Loopr Calendar
+ * 
+ * Arquitectura CSS modular optimizada:
+ * - Variables CSS personalizadas
+ * - Sistema de diseño escalable
+ * - Temas claro/oscuro
+ * - Componentes reutilizables
+ * - Utilidades funcionales
+ * - Animaciones suaves
+ */
+
+/* ======================================
+   📁 IMPORTACIONES BASE
+   ====================================== */
+
+/* Variables y configuración base */
+@import './base/variables.css';
+@import './base/reset.css';
+
+/* ======================================
+   🧩 IMPORTACIONES DE COMPONENTES
+   ====================================== */
+
+/* Componentes básicos */
+@import './components/index.css';
+
+/* Componentes avanzados */
+@import './components/advanced.css';
+
+/* ======================================
+   🛠️ IMPORTACIONES DE UTILIDADES
+   ====================================== */
+
+/* Sistema de utilidades */
+@import './utilities/index.css';
+
+/* ======================================
+   🎨 IMPORTACIONES DE TEMAS
+   ====================================== */
+
+/* Temas de color */
+@import './themes/light.css';
+@import './themes/dark.css';
+
+/* ======================================
+   ✨ IMPORTACIONES DE ANIMACIONES
+   ====================================== */
+
+/* Biblioteca de animaciones */
+@import './animations/index.css';
+
+/* ======================================
+   🏗️ ESTILOS GLOBALES ESPECÍFICOS
+   ====================================== */
+
+/* Configuración del cuerpo de la página */
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--text-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--text-primary);
+  background-color: var(--background-color);
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
+}
+
+/* Configuración de la aplicación principal */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mejoras de accesibilidad */
+:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Optimización de rendimiento para animaciones */
+* {
+  box-sizing: border-box;
+}
+
+/* Configuración para elementos con animaciones */
+.animate-gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Configuración para scroll suave */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejoras para dispositivos táctiles */
+@media (hover: none) and (pointer: coarse) {
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  .hover-scale:hover {
+    transform: none;
+  }
+}
+
+/* Reducir animaciones para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-fade-in,
+  .animate-slide-in-up,
+  .animate-slide-in-down,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-bounce-in,
+  .animate-zoom-in,
+  .animate-rotate-in {
+    animation: none !important;
+  }
+}
+
+/* Configuración para modo de alto contraste */
+@media (prefers-contrast: high) {
+  :root {
+    --border-width: 2px;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+
+  .card {
+    border-width: var(--border-width);
+  }
+
+  .btn {
+    border-width: var(--border-width);
+  }
+}
+
+/* Configuración para tema oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    /* Aplicar variables del tema oscuro cuando no hay tema explícito */
+    color-scheme: dark;
+  }
+}
+
+/* ======================================
+   📱 MEJORAS ESPECÍFICAS MÓVILES
+   ====================================== */
+
+@media (max-width: 768px) {
+  /* Optimizaciones para pantallas pequeñas */
+  body {
+    font-size: var(--text-sm);
+  }
+
+  /* Mejorar el área táctil de botones */
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Espaciado optimizado para móvil */
+  .container {
+    padding-left: var(--spacing-4);
+    padding-right: var(--spacing-4);
+  }
+}
+
+/* ======================================
+   🎯 UTILIDADES DE DEPURACIÓN
+   ====================================== */
+
+/* Solo en modo debug */
+.debug-mode {
+  .debug-grid {
+    background-image:
+      linear-gradient(rgba(255, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .debug-border {
+    outline: 1px solid red !important;
+  }
+
+  .debug-info {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: var(--spacing-2);
+    border-radius: var(--radius-md);
+    font-size: var(--text-xs);
+    z-index: 9999;
+  }
+}
+
+/* === ESTILOS GLOBALES === */
+
+/* Configuración del tema por defecto */
+html {
+  /* Aplicar tema claro por defecto */
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* Configuración de la aplicación principal */
+#app {
+  min-height: 100vh;
+  background-color: var(--loopr-surface-primary);
+  color: var(--loopr-text-primary);
+  font-family: var(--loopr-font-family-sans);
+  font-size: var(--loopr-font-size-base);
+  line-height: var(--loopr-line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Configuración del scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--loopr-scrollbar-track);
+  border-radius: var(--loopr-border-radius-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--loopr-scrollbar-thumb);
+  border-radius: var(--loopr-border-radius-base);
+  transition: background-color var(--loopr-transition-duration-150)
+    var(--loopr-transition-timing-ease-in-out);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--loopr-scrollbar-thumb-hover);
+}
+
+/* Configuración para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--loopr-scrollbar-thumb) var(--loopr-scrollbar-track);
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Configuración automática del tema basada en preferencias del sistema */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+
+    /* Aplicar variables del tema oscuro cuando no hay tema explícito */
+    --loopr-surface-primary: #0f172a;
+    --loopr-surface-secondary: #1e293b;
+    --loopr-surface-tertiary: #334155;
+    --loopr-surface-accent: #475569;
+    --loopr-text-primary: #f8fafc;
+    --loopr-text-secondary: #e2e8f0;
+    --loopr-text-tertiary: #cbd5e1;
+    --loopr-text-muted: #94a3b8;
+    --loopr-border-primary: #334155;
+    --loopr-border-secondary: #475569;
+    --loopr-icon-primary: #e2e8f0;
+    --loopr-icon-secondary: #cbd5e1;
+    --loopr-scrollbar-track: #1e293b;
+    --loopr-scrollbar-thumb: #475569;
+    --loopr-scrollbar-thumb-hover: #64748b;
+  }
+}
+
+/* Configuración de alto contraste */
+@media (prefers-contrast: high) {
+  html:not([data-theme]) {
+    --loopr-text-primary: #000000;
+    --loopr-border-primary: #374151;
+    --loopr-border-secondary: #6b7280;
+  }
+
+  html[data-theme='dark']:not([data-theme*='high-contrast']) {
+    --loopr-surface-primary: #000000;
+    --loopr-text-primary: #ffffff;
+    --loopr-border-primary: #6b7280;
+    --loopr-border-secondary: #9ca3af;
+  }
+}
+
+/* Configuración para impresión */
+@media print {
+  html {
+    color-scheme: light;
+    --loopr-surface-primary: #ffffff;
+    --loopr-surface-secondary: #ffffff;
+    --loopr-text-primary: #000000;
+    --loopr-text-secondary: #374151;
+    --loopr-border-primary: #d1d5db;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* Optimizaciones para calendario en impresión */
+  .calendar-grid {
+    break-inside: avoid;
+  }
+
+  .calendar-cell {
+    border: 1px solid #d1d5db !important;
+    background: #ffffff !important;
+  }
+}
+
+/* Estilos específicos para el calendario */
+.calendar-container {
+  background-color: var(--loopr-calendar-bg);
+  border: var(--loopr-border-width-1) solid var(--loopr-calendar-border);
+  border-radius: var(--loopr-border-radius-lg);
+  box-shadow: var(--loopr-shadow-sm);
+  overflow: hidden;
+}
+
+.calendar-header {
+  background-color: var(--loopr-calendar-header-bg);
+  border-bottom: var(--loopr-border-width-1) solid var(--loopr-calendar-border);
+  padding: var(--loopr-space-4);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--loopr-calendar-cell-bg);
+  border: var(--loopr-border-width-1) solid var(--loopr-calendar-border);
+  color: var(--loopr-text-primary);
+  cursor: pointer;
+  transition: all var(--loopr-transition-duration-150)
+    var(--loopr-transition-timing-ease-in-out);
+
+  &:hover {
+    background-color: var(--loopr-calendar-cell-hover);
+  }
+
+  &.today {
+    background-color: var(--loopr-calendar-cell-today);
+    font-weight: var(--loopr-font-weight-semibold);
+  }
+
+  &.selected {
+    background-color: var(--loopr-calendar-cell-selected);
+    border-color: var(--loopr-primary-500);
+    color: var(--loopr-primary-700);
+    font-weight: var(--loopr-font-weight-semibold);
+  }
+
+  &.other-month {
+    background-color: var(--loopr-calendar-cell-other-month);
+    color: var(--loopr-text-muted);
+  }
+
+  &.disabled {
+    color: var(--loopr-text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+/* Animaciones suaves para transiciones de tema */
+.theme-transition,
+.theme-transition *,
+.theme-transition *:before,
+.theme-transition *:after {
+  transition: all var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-in-out) !important;
+  transition-delay: 0s !important;
+}
+
+/* Estilos para modo de depuración */
+.debug-mode {
+  * {
+    outline: 1px solid rgba(255, 0, 0, 0.2) !important;
+  }
+
+  *:hover {
+    outline: 1px solid rgba(255, 0, 0, 0.6) !important;
+  }
+}
+
+/* === LEGACY SUPPORT === */
+/* Mantenemos estilos existentes para compatibilidad */
+.calendar-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-header h1 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.calendar-header h2 {
+  color: var(--text-color);
+  margin: 0.5rem 0;
+  font-size: 1.5rem;
+}
+
+.calendar-header p {
+  color: var(--secondary-color);
+  margin-bottom: 0.25rem;
+}
+
+/* Navegación del calendario */
+.calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.current-date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 300px;
+  justify-content: center;
+}
+
+.today-badge {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.nav-button,
+.today-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s;
+}
+
+.nav-button:hover,
+.today-button:hover {
+  background: #1d4ed8;
+}
+
+.nav-button:disabled,
+.today-button:disabled {
+  background: var(--secondary-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Selector de vista */
+.view-selector {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.view-button {
+  background: var(--background-color);
+  color: var(--text-color);
+  border: 2px solid var(--border-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.view-button:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.view-button.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+/* Cabecera de días de la semana */
+.weekdays-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  margin: 1rem 0;
+  background: var(--border-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.weekday {
+  background: var(--background-color);
+  padding: 0.75rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+/* Área de eventos */
+.events-area {
+  margin: 2rem 0;
+  padding: 1rem;
+  background: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.events-area h3 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.no-events {
+  color: var(--secondary-color);
+  font-style: italic;
+  text-align: center;
+  padding: 2rem;
+}
+
+.events-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.event-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: #f8fafc;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--primary-color);
+}
+
+.event-title {
+  flex: 1;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.remove-event {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.remove-event:hover {
+  background: #fee2e2;
+}
+
+.add-event-button {
+  width: 100%;
+  background: var(--success-color);
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.add-event-button:hover:not(:disabled) {
+  background: #047857;
+}
+
+.add-event-button:disabled {
+  background: var(--secondary-color);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.debug-info {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: var(--border-radius);
+  font-size: 0.875rem;
+}
+
+.debug-info p {
+  margin: 0.25rem 0;
+  color: #92400e;
+}
+
+.calendar-content {
+  background: var(--background-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  padding: 2rem;
+}
+
+.calendar-grid p {
+  margin: 0.5rem 0;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.calendar-grid p strong {
+  color: var(--primary-color);
+}
+
+/* Responsive design para calendario */
+@media (max-width: 768px) {
+  .calendar-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .current-date {
+    min-width: auto;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .view-selector {
+    justify-content: center;
+  }
+
+  .view-button {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .weekdays-header {
+    font-size: 0.8rem;
+  }
+
+  .calendar-app {
+    padding: 0.5rem;
+  }
+
+  .calendar-content {
+    padding: 1rem;
+  }
+}

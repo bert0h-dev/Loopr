@@ -1,0 +1,502 @@
+/**
+ * 🎭 Animaciones CSS - Loopr
+ * 
+ * Biblioteca de animaciones y transiciones suaves
+ */
+
+/* === KEYFRAMES === */
+
+/* Fade in/out */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Slide animations */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale animations */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Bounce animation */
+@keyframes bounce {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Shake animation */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* Wobble animation */
+@keyframes wobble {
+  0% {
+    transform: translateX(0%);
+  }
+  15% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+  30% {
+    transform: translateX(3px) rotate(1deg);
+  }
+  45% {
+    transform: translateX(-3px) rotate(-1deg);
+  }
+  60% {
+    transform: translateX(2px) rotate(0deg);
+  }
+  75% {
+    transform: translateX(-1px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* Loading spinner */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Progress bar animation */
+@keyframes progressFill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Modal overlay animation */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* Calendar specific animations */
+@keyframes calendarCellEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes eventPop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Theme transition animation */
+@keyframes themeTransition {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* === ANIMATION CLASSES === */
+
+/* Fade animations */
+.animate-fade-in {
+  animation: fadeIn var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-in-out) forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-in-out) forwards;
+}
+
+/* Slide animations */
+.animate-slide-in-up {
+  animation: slideInUp var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-slide-in-down {
+  animation: slideInDown var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+/* Scale animations */
+.animate-scale-in {
+  animation: scaleIn var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-scale-out {
+  animation: scaleOut var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-in) forwards;
+}
+
+/* Interactive animations */
+.animate-bounce {
+  animation: bounce 0.6s ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-wobble {
+  animation: wobble 0.8s ease-in-out;
+}
+
+/* Loading animations */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-progress {
+  animation: progressFill 2s ease-in-out forwards;
+}
+
+/* Calendar specific */
+.animate-calendar-cell {
+  animation: calendarCellEnter var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-event-pop {
+  animation: eventPop 0.3s ease-in-out;
+}
+
+/* Modal animations */
+.animate-modal-overlay {
+  animation: overlayFadeIn var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.animate-modal-content {
+  animation: scaleIn var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+/* Theme transition */
+.animate-theme-transition {
+  animation: themeTransition var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-in-out) forwards;
+}
+
+/* === HOVER ANIMATIONS === */
+
+.hover-lift {
+  transition:
+    transform var(--loopr-transition-duration-200)
+      var(--loopr-transition-timing-ease-out),
+    box-shadow var(--loopr-transition-duration-200)
+      var(--loopr-transition-timing-ease-out);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--loopr-shadow-lg);
+}
+
+.hover-scale {
+  transition: transform var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-out);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-rotate {
+  transition: transform var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-out);
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.hover-glow {
+  transition: box-shadow var(--loopr-transition-duration-200)
+    var(--loopr-transition-timing-ease-out);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+/* === STAGGER ANIMATIONS === */
+
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.stagger-children > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-children > *:nth-child(2) {
+  animation-delay: 100ms;
+}
+.stagger-children > *:nth-child(3) {
+  animation-delay: 200ms;
+}
+.stagger-children > *:nth-child(4) {
+  animation-delay: 300ms;
+}
+.stagger-children > *:nth-child(5) {
+  animation-delay: 400ms;
+}
+.stagger-children > *:nth-child(6) {
+  animation-delay: 500ms;
+}
+.stagger-children > *:nth-child(7) {
+  animation-delay: 600ms;
+}
+
+/* === FOCUS ANIMATIONS === */
+
+.focus-ring {
+  transition: box-shadow var(--loopr-transition-duration-150)
+    var(--loopr-transition-timing-ease-in-out);
+}
+
+.focus-ring:focus {
+  box-shadow: 0 0 0 3px var(--loopr-primary-200);
+  animation: pulse 1s ease-in-out 1;
+}
+
+/* === LOADING STATES === */
+
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--loopr-gray-200) 25%,
+    var(--loopr-gray-300) 50%,
+    var(--loopr-gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite ease-in-out;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* === CALENDAR SPECIFIC ANIMATIONS === */
+
+.calendar-view-enter {
+  opacity: 0;
+  transform: translateX(20px);
+  animation: slideInRight var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-out) forwards;
+}
+
+.calendar-view-exit {
+  opacity: 1;
+  transform: translateX(0);
+  animation: slideInLeft var(--loopr-transition-duration-300)
+    var(--loopr-transition-timing-ease-in) forwards;
+}
+
+.calendar-date-change {
+  animation: pulse 0.4s ease-in-out;
+}
+
+.event-add {
+  animation:
+    slideInUp 0.3s ease-out,
+    eventPop 0.3s ease-out 0.3s;
+}
+
+.event-remove {
+  animation: scaleOut 0.3s ease-in forwards;
+}
+
+/* === ACCESSIBILITY === */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-spin {
+    animation: none;
+  }
+
+  .loading-skeleton {
+    animation: none;
+    background: var(--loopr-gray-200);
+  }
+}
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+
+.will-animate {
+  will-change: transform, opacity;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

@@ -1,0 +1,286 @@
+/**
+ * 🔄 Reset CSS Moderno - Loopr
+ * 
+ * Basado en modern-normalize con mejoras específicas
+ */
+
+/*
+ * 1. Corregir la altura de línea en todos los navegadores.
+ * 2. Prevenir ajustes del tamaño de fuente después de cambios de orientación en iOS.
+ */
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+/*
+ * 1. Usar un mejor modelo de caja por defecto para todos los elementos.
+ * 2. Usar fuentes consistentes del sistema.
+ */
+*,
+::before,
+::after {
+  box-sizing: border-box; /* 1 */
+}
+
+/*
+ * 1. Eliminar el margen por defecto en todos los navegadores.
+ * 2. Heredar definiciones de altura de línea.
+ */
+body {
+  margin: 0; /* 1 */
+  font-family: var(--loopr-font-family-sans);
+  font-size: var(--loopr-font-size-base);
+  line-height: var(--loopr-line-height-normal); /* 2 */
+  color: var(--loopr-gray-900);
+  background-color: var(--loopr-gray-50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Agregar la altura de línea correcta en Chrome, Edge e IE.
+ */
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: var(--loopr-border-width-1);
+}
+
+/*
+ * 1. Eliminar el borde gris en IE.
+ * 2. Agregar la altura de línea correcta en Firefox.
+ */
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
+}
+
+/*
+ * Agregar el peso de fuente correcto en Chrome, Edge y Safari.
+ */
+b,
+strong {
+  font-weight: var(--loopr-font-weight-bold);
+}
+
+/*
+ * 1. Mejorar la consistencia de la fuente monospace por defecto en todos los navegadores.
+ * 2. Corregir el tamaño de fuente impar `em` en todos los navegadores.
+ */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--loopr-font-family-mono); /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/*
+ * Agregar el tamaño de fuente correcto en todos los navegadores.
+ */
+small {
+  font-size: 80%;
+}
+
+/*
+ * Prevenir que elementos `sub` y `sup` afecten la altura de línea en todos los navegadores.
+ */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+ * 1. Eliminar el margen inferior predeterminado.
+ * 2. Heredar definiciones de altura de línea para elementos de formulario.
+ */
+button,
+input,
+optgroup,
+select,
+textarea {
+  margin: 0; /* 1 */
+  font-family: inherit; /* 2 */
+  font-size: 100%; /* 2 */
+  line-height: var(--loopr-line-height-normal); /* 2 */
+  color: inherit; /* 2 */
+}
+
+/*
+ * Eliminar el padding para que los desarrolladores no se sorprendan cuando lo pongan a cero para elementos de lista.
+ */
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Prevenir que WebKit redimensione el área de texto.
+ */
+textarea {
+  resize: vertical;
+}
+
+/*
+ * 1. Corregir la inhabilidad para aplicar estilos a elementos clickeables en iOS y Safari.
+ * 2. Agregar "hand cursor" a elementos clickeables que no sean enlaces.
+ */
+button,
+[role='button'] {
+  cursor: pointer;
+}
+
+/*
+ * Agregar el cursor correcto en Chrome, Safari y Edge.
+ */
+:disabled {
+  cursor: default;
+}
+
+/*
+ * 1. Evitar que las imágenes se salgan de sus contenedores.
+ * 2. Establecer altura automática para mantener proporciones.
+ */
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  max-width: 100%; /* 1 */
+  height: auto; /* 2 */
+}
+
+/*
+ * Hacer que las imágenes sean responsivas por defecto
+ */
+img {
+  border-style: none;
+}
+
+/*
+ * Corregir estilos de outline en Safari
+ */
+button:focus,
+[role='button']:focus {
+  outline: var(--loopr-border-width-2) solid var(--loopr-primary-500);
+  outline-offset: var(--loopr-border-width-2);
+}
+
+/*
+ * Eliminar outline para usuarios que navegan con mouse
+ */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+/*
+ * Agregar outline personalizado para usuarios que navegan con teclado
+ */
+.js-focus-visible .focus-visible {
+  outline: var(--loopr-border-width-2) solid var(--loopr-primary-500);
+  outline-offset: var(--loopr-border-width-2);
+}
+
+/*
+ * Hacer que todos los elementos de texto hereden el color del texto
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+div,
+section,
+article,
+aside,
+header,
+footer,
+nav,
+li,
+dt,
+dd,
+blockquote,
+figcaption,
+address {
+  color: inherit;
+}
+
+/*
+ * Establecer márgenes consistentes para elementos de texto
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+figure,
+pre,
+ul,
+ol,
+dl,
+dd,
+hr {
+  margin: 0;
+}
+
+/*
+ * Tipografía mejorada para encabezados
+ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--loopr-font-weight-semibold);
+  line-height: var(--loopr-line-height-tight);
+}
+
+h1 {
+  font-size: var(--loopr-font-size-3xl);
+}
+h2 {
+  font-size: var(--loopr-font-size-2xl);
+}
+h3 {
+  font-size: var(--loopr-font-size-xl);
+}
+h4 {
+  font-size: var(--loopr-font-size-lg);
+}
+h5 {
+  font-size: var(--loopr-font-size-base);
+}
+h6 {
+  font-size: var(--loopr-font-size-sm);
+}

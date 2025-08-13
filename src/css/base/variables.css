@@ -1,0 +1,161 @@
+/**
+ * 🎨 Variables CSS Base - Loopr
+ * 
+ * Variables fundamentales del sistema de diseño
+ */
+
+:root {
+  /* === COLORES PRINCIPALES === */
+  --loopr-primary-50: #eff6ff;
+  --loopr-primary-100: #dbeafe;
+  --loopr-primary-200: #bfdbfe;
+  --loopr-primary-300: #93c5fd;
+  --loopr-primary-400: #60a5fa;
+  --loopr-primary-500: #3b82f6;
+  --loopr-primary-600: #2563eb;
+  --loopr-primary-700: #1d4ed8;
+  --loopr-primary-800: #1e40af;
+  --loopr-primary-900: #1e3a8a;
+
+  /* === COLORES SEMÁNTICOS === */
+  --loopr-success-50: #ecfdf5;
+  --loopr-success-500: #10b981;
+  --loopr-success-600: #059669;
+  --loopr-success-700: #047857;
+
+  --loopr-warning-50: #fffbeb;
+  --loopr-warning-500: #f59e0b;
+  --loopr-warning-600: #d97706;
+  --loopr-warning-700: #b45309;
+
+  --loopr-error-50: #fef2f2;
+  --loopr-error-500: #ef4444;
+  --loopr-error-600: #dc2626;
+  --loopr-error-700: #b91c1c;
+
+  --loopr-info-50: #f0f9ff;
+  --loopr-info-500: #06b6d4;
+  --loopr-info-600: #0891b2;
+  --loopr-info-700: #0e7490;
+
+  /* === COLORES NEUTROS === */
+  --loopr-gray-50: #f9fafb;
+  --loopr-gray-100: #f3f4f6;
+  --loopr-gray-200: #e5e7eb;
+  --loopr-gray-300: #d1d5db;
+  --loopr-gray-400: #9ca3af;
+  --loopr-gray-500: #6b7280;
+  --loopr-gray-600: #4b5563;
+  --loopr-gray-700: #374151;
+  --loopr-gray-800: #1f2937;
+  --loopr-gray-900: #111827;
+
+  /* === ESPACIADO === */
+  --loopr-space-1: 0.25rem; /* 4px */
+  --loopr-space-2: 0.5rem; /* 8px */
+  --loopr-space-3: 0.75rem; /* 12px */
+  --loopr-space-4: 1rem; /* 16px */
+  --loopr-space-5: 1.25rem; /* 20px */
+  --loopr-space-6: 1.5rem; /* 24px */
+  --loopr-space-8: 2rem; /* 32px */
+  --loopr-space-10: 2.5rem; /* 40px */
+  --loopr-space-12: 3rem; /* 48px */
+  --loopr-space-16: 4rem; /* 64px */
+  --loopr-space-20: 5rem; /* 80px */
+  --loopr-space-24: 6rem; /* 96px */
+
+  /* === TIPOGRAFÍA === */
+  --loopr-font-family-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue',
+    Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --loopr-font-family-mono:
+    'SF Mono', Monaco, Inconsolata, 'Roboto Mono', 'Source Code Pro', Menlo,
+    Consolas, 'DejaVu Sans Mono', monospace;
+
+  --loopr-font-size-xs: 0.75rem; /* 12px */
+  --loopr-font-size-sm: 0.875rem; /* 14px */
+  --loopr-font-size-base: 1rem; /* 16px */
+  --loopr-font-size-lg: 1.125rem; /* 18px */
+  --loopr-font-size-xl: 1.25rem; /* 20px */
+  --loopr-font-size-2xl: 1.5rem; /* 24px */
+  --loopr-font-size-3xl: 1.875rem; /* 30px */
+  --loopr-font-size-4xl: 2.25rem; /* 36px */
+  --loopr-font-size-5xl: 3rem; /* 48px */
+
+  --loopr-font-weight-light: 300;
+  --loopr-font-weight-normal: 400;
+  --loopr-font-weight-medium: 500;
+  --loopr-font-weight-semibold: 600;
+  --loopr-font-weight-bold: 700;
+  --loopr-font-weight-extrabold: 800;
+
+  --loopr-line-height-tight: 1.25;
+  --loopr-line-height-snug: 1.375;
+  --loopr-line-height-normal: 1.5;
+  --loopr-line-height-relaxed: 1.625;
+  --loopr-line-height-loose: 2;
+
+  /* === BORDES === */
+  --loopr-border-width-0: 0px;
+  --loopr-border-width-1: 1px;
+  --loopr-border-width-2: 2px;
+  --loopr-border-width-4: 4px;
+  --loopr-border-width-8: 8px;
+
+  --loopr-border-radius-none: 0;
+  --loopr-border-radius-sm: 0.125rem; /* 2px */
+  --loopr-border-radius-base: 0.25rem; /* 4px */
+  --loopr-border-radius-md: 0.375rem; /* 6px */
+  --loopr-border-radius-lg: 0.5rem; /* 8px */
+  --loopr-border-radius-xl: 0.75rem; /* 12px */
+  --loopr-border-radius-2xl: 1rem; /* 16px */
+  --loopr-border-radius-3xl: 1.5rem; /* 24px */
+  --loopr-border-radius-full: 9999px;
+
+  /* === SOMBRAS === */
+  --loopr-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --loopr-shadow-base:
+    0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --loopr-shadow-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --loopr-shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --loopr-shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --loopr-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --loopr-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+  /* === TRANSICIONES === */
+  --loopr-transition-duration-75: 75ms;
+  --loopr-transition-duration-100: 100ms;
+  --loopr-transition-duration-150: 150ms;
+  --loopr-transition-duration-200: 200ms;
+  --loopr-transition-duration-300: 300ms;
+  --loopr-transition-duration-500: 500ms;
+  --loopr-transition-duration-700: 700ms;
+  --loopr-transition-duration-1000: 1000ms;
+
+  --loopr-transition-timing-linear: linear;
+  --loopr-transition-timing-ease: ease;
+  --loopr-transition-timing-ease-in: ease-in;
+  --loopr-transition-timing-ease-out: ease-out;
+  --loopr-transition-timing-ease-in-out: ease-in-out;
+
+  /* === Z-INDEX === */
+  --loopr-z-index-0: 0;
+  --loopr-z-index-10: 10;
+  --loopr-z-index-20: 20;
+  --loopr-z-index-30: 30;
+  --loopr-z-index-40: 40;
+  --loopr-z-index-50: 50;
+  --loopr-z-index-auto: auto;
+
+  /* === BREAKPOINTS (para uso en JS) === */
+  --loopr-breakpoint-sm: 640px;
+  --loopr-breakpoint-md: 768px;
+  --loopr-breakpoint-lg: 1024px;
+  --loopr-breakpoint-xl: 1280px;
+  --loopr-breakpoint-2xl: 1536px;
+}

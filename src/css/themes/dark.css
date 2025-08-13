@@ -1,0 +1,103 @@
+/**
+ * 🌙 Tema Oscuro - Loopr
+ * 
+ * Definición de variables para el tema oscuro
+ */
+
+[data-theme='dark'] {
+  /* === SUPERFICIE === */
+  --loopr-surface-primary: #0f172a;
+  --loopr-surface-secondary: #1e293b;
+  --loopr-surface-tertiary: #334155;
+  --loopr-surface-accent: #475569;
+
+  /* === TEXTO === */
+  --loopr-text-primary: #f8fafc;
+  --loopr-text-secondary: #e2e8f0;
+  --loopr-text-tertiary: #cbd5e1;
+  --loopr-text-muted: #94a3b8;
+  --loopr-text-inverse: #0f172a;
+
+  /* === BORDES === */
+  --loopr-border-primary: #334155;
+  --loopr-border-secondary: #475569;
+  --loopr-border-focus: var(--loopr-primary-400);
+
+  /* === ICONOS === */
+  --loopr-icon-primary: #e2e8f0;
+  --loopr-icon-secondary: #cbd5e1;
+  --loopr-icon-muted: #94a3b8;
+
+  /* === CALENDARIO ESPECÍFICO === */
+  --loopr-calendar-bg: #0f172a;
+  --loopr-calendar-header-bg: #1e293b;
+  --loopr-calendar-cell-bg: #0f172a;
+  --loopr-calendar-cell-hover: #1e293b;
+  --loopr-calendar-cell-selected: var(--loopr-primary-900);
+  --loopr-calendar-cell-today: var(--loopr-primary-800);
+  --loopr-calendar-cell-other-month: #1e293b;
+  --loopr-calendar-border: #334155;
+
+  /* === NAVEGACIÓN === */
+  --loopr-nav-bg: #1e293b;
+  --loopr-nav-border: #334155;
+  --loopr-nav-link-hover: #334155;
+  --loopr-nav-link-active: var(--loopr-primary-900);
+
+  /* === FORMULARIOS === */
+  --loopr-input-bg: #1e293b;
+  --loopr-input-border: #475569;
+  --loopr-input-placeholder: #64748b;
+  --loopr-input-focus-border: var(--loopr-primary-400);
+  --loopr-input-focus-shadow: var(--loopr-primary-900);
+
+  /* === MODALES === */
+  --loopr-modal-bg: #1e293b;
+  --loopr-modal-overlay: rgba(0, 0, 0, 0.8);
+  --loopr-modal-border: #475569;
+
+  /* === TOOLTIPS === */
+  --loopr-tooltip-bg: #475569;
+  --loopr-tooltip-text: #f8fafc;
+
+  /* === SCROLLBAR === */
+  --loopr-scrollbar-track: #1e293b;
+  --loopr-scrollbar-thumb: #475569;
+  --loopr-scrollbar-thumb-hover: #64748b;
+
+  /* === COLORES AJUSTADOS === */
+  --loopr-primary-50: #1e293b;
+  --loopr-primary-100: #334155;
+  --loopr-primary-900: #0c4a6e;
+  --loopr-primary-800: #075985;
+
+  --loopr-success-50: #14532d;
+  --loopr-success-800: #15803d;
+  --loopr-success-900: #166534;
+
+  --loopr-warning-50: #451a03;
+  --loopr-warning-800: #92400e;
+  --loopr-warning-900: #78350f;
+
+  --loopr-error-50: #450a0a;
+  --loopr-error-800: #dc2626;
+  --loopr-error-900: #b91c1c;
+
+  --loopr-gray-50: #1e293b;
+  --loopr-gray-100: #334155;
+  --loopr-gray-200: #475569;
+  --loopr-gray-800: #cbd5e1;
+  --loopr-gray-900: #e2e8f0;
+}
+
+/* === MODO ALTO CONTRASTE OSCURO === */
+[data-theme='dark-high-contrast'] {
+  --loopr-surface-primary: #000000;
+  --loopr-surface-secondary: #111827;
+  --loopr-text-primary: #ffffff;
+  --loopr-text-secondary: #f3f4f6;
+  --loopr-border-primary: #6b7280;
+  --loopr-border-secondary: #9ca3af;
+  --loopr-icon-primary: #f3f4f6;
+  --loopr-icon-secondary: #d1d5db;
+}

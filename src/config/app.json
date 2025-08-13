@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "Loopr Calendar",
+    "version": "1.0.3",
+    "description": "Un motor de calendario ligero y extensible",
+    "author": "Bert0h-dev"
+  },
+  "features": {
+    "multipleViews": true,
+    "eventManagement": true,
+    "customization": true,
+    "responsive": true,
+    "accessibility": true
+  },
+  "supportedLocales": [
+    "es-MX",
+    "es-ES",
+    "en-US",
+    "en-GB",
+    "fr-FR",
+    "de-DE",
+    "pt-BR"
+  ],
+  "defaultSettings": {
+    "view": "month",
+    "startDay": 1,
+    "timeFormat": "24h",
+    "dateFormat": "dd/mm/yyyy",
+    "showWeekNumbers": false,
+    "highlightToday": true
+  },
+  "themes": {
+    "light": {
+      "primary": "#2563eb",
+      "secondary": "#64748b",
+      "background": "#ffffff",
+      "text": "#1f2937"
+    },
+    "dark": {
+      "primary": "#3b82f6",
+      "secondary": "#94a3b8",
+      "background": "#1f2937",
+      "text": "#f9fafb"
+    }
+  },
+  "eventTypes": [
+    {
+      "id": "personal",
+      "name": "Personal",
+      "color": "#3b82f6",
+      "icon": "👤"
+    },
+    {
+      "id": "work",
+      "name": "Trabajo",
+      "color": "#8b5cf6",
+      "icon": "💼"
+    },
+    {
+      "id": "meeting",
+      "name": "Reunión",
+      "color": "#ef4444",
+      "icon": "🤝"
+    },
+    {
+      "id": "reminder",
+      "name": "Recordatorio",
+      "color": "#f59e0b",
+      "icon": "⏰"
+    },
+    {
+      "id": "holiday",
+      "name": "Festivo",
+      "color": "#10b981",
+      "icon": "🎉"
+    }
+  ]
+}

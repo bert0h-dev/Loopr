@@ -1,0 +1,78 @@
+/**
+ * 🌅 Tema Claro - Loopr
+ * 
+ * Definición de variables para el tema claro (por defecto)
+ */
+
+[data-theme='light'],
+:root {
+  /* === SUPERFICIE === */
+  --loopr-surface-primary: #ffffff;
+  --loopr-surface-secondary: #f8fafc;
+  --loopr-surface-tertiary: #f1f5f9;
+  --loopr-surface-accent: #e2e8f0;
+
+  /* === TEXTO === */
+  --loopr-text-primary: #0f172a;
+  --loopr-text-secondary: #475569;
+  --loopr-text-tertiary: #64748b;
+  --loopr-text-muted: #94a3b8;
+  --loopr-text-inverse: #ffffff;
+
+  /* === BORDES === */
+  --loopr-border-primary: #e2e8f0;
+  --loopr-border-secondary: #cbd5e1;
+  --loopr-border-focus: var(--loopr-primary-500);
+
+  /* === ICONOS === */
+  --loopr-icon-primary: #475569;
+  --loopr-icon-secondary: #64748b;
+  --loopr-icon-muted: #94a3b8;
+
+  /* === CALENDARIO ESPECÍFICO === */
+  --loopr-calendar-bg: #ffffff;
+  --loopr-calendar-header-bg: #f8fafc;
+  --loopr-calendar-cell-bg: #ffffff;
+  --loopr-calendar-cell-hover: #f1f5f9;
+  --loopr-calendar-cell-selected: var(--loopr-primary-50);
+  --loopr-calendar-cell-today: var(--loopr-primary-100);
+  --loopr-calendar-cell-other-month: #f8fafc;
+  --loopr-calendar-border: #e2e8f0;
+
+  /* === NAVEGACIÓN === */
+  --loopr-nav-bg: #ffffff;
+  --loopr-nav-border: #e2e8f0;
+  --loopr-nav-link-hover: #f1f5f9;
+  --loopr-nav-link-active: var(--loopr-primary-50);
+
+  /* === FORMULARIOS === */
+  --loopr-input-bg: #ffffff;
+  --loopr-input-border: #d1d5db;
+  --loopr-input-placeholder: #9ca3af;
+  --loopr-input-focus-border: var(--loopr-primary-500);
+  --loopr-input-focus-shadow: var(--loopr-primary-100);
+
+  /* === MODALES === */
+  --loopr-modal-bg: #ffffff;
+  --loopr-modal-overlay: rgba(0, 0, 0, 0.5);
+  --loopr-modal-border: #e5e7eb;
+
+  /* === TOOLTIPS === */
+  --loopr-tooltip-bg: #374151;
+  --loopr-tooltip-text: #ffffff;
+
+  /* === SCROLLBAR === */
+  --loopr-scrollbar-track: #f1f5f9;
+  --loopr-scrollbar-thumb: #cbd5e1;
+  --loopr-scrollbar-thumb-hover: #94a3b8;
+}
+
+/* === MODO ALTO CONTRASTE === */
+[data-theme='light-high-contrast'] {
+  --loopr-text-primary: #000000;
+  --loopr-text-secondary: #1f2937;
+  --loopr-border-primary: #374151;
+  --loopr-border-secondary: #6b7280;
+  --loopr-icon-primary: #1f2937;
+  --loopr-icon-secondary: #374151;
+}
