@@ -22,73 +22,34 @@ export const ToolbarSection = ({ section }) => {
     config,
     activeView,
     dateController,
-    // Acciones categorizadas (nueva arquitectura)
     navigation,
     view,
+    ui,
   } = useCalendarContext();
+  const todooo = useCalendarContext();
+
+  // Usar el estado de loading del contexto en lugar del estado local isAnimating
+  const isLoading = ui?.loading || false;
+  console.log(todooo);
 
   let formattedConfig = config.viewFormats[activeView] || {
     month: 'long',
   };
 
-  // Suscribirse a eventos específicos del calendario
+  // Suscribirse a eventos específicos del calendario para animaciones adicionales si es necesario
   useEffect(() => {
-    // Escuchar navegación de mes
-    const unsubscribeNextMonth = dateController.on(
+    // Escuchar cambios de mes para animaciones adicionales
+    const unsubscribeMonthChange = dateController.on(
       'nextMonth',
       ({ current, previous }) => {
+        // Aquí puedes agregar animaciones específicas si las necesitas
         setIsAnimating(true);
         setTimeout(() => setIsAnimating(false), 300);
       }
-    );
-
-    const unsubscribePrevMonth = dateController.on(
-      'prevMonth',
-      ({ current, previous }) => {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 300);
-      }
-    );
-
-    // Escuchar navegación de año
-    const unsubscribeNextYear = dateController.on(
-      'nextYear',
-      ({ current, previous }) => {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 300);
-      }
-    );
-
-    const unsubscribePrevYear = dateController.on(
-      'prevYear',
-      ({ current, previous }) => {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 300);
-      }
-    );
-
-    // Escuchar cuando se va a "hoy"
-    const unsubscribeGoToToday = dateController.on(
-      'goToToday',
-      ({ current, previous }) => {
-        setIsAnimating(true);
-        setTimeout(() => setIsAnimating(false), 500);
-      }
-    );
-
-    // Escuchar cambios de mes (desde cualquier método)
-    const unsubscribeMonthChange = dateController.on(
-      'monthChange',
-      ({ current, previous }) => {}
     );
 
     // Cleanup: desuscribirse cuando el componente se desmonte
     return () => {
-      unsubscribeNextMonth();
-      unsubscribePrevMonth();
-      unsubscribeNextYear();
-      unsubscribePrevYear();
-      unsubscribeGoToToday();
       unsubscribeMonthChange();
     };
   }, [dateController]);
@@ -145,7 +106,7 @@ export const ToolbarSection = ({ section }) => {
           'button',
           'is-primary',
           buttonClass || '',
-          isAnimating ? 'is-loading' : '',
+          isLoading ? 'is-loading' : '',
         ];
         if (buttonClick === 'month') {
           switch (activeView) {

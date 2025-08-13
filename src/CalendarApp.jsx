@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { CalendarContent } from '@/CalendarContent.jsx';
 import { CalendarProvider } from '@/context/CalendarContext.jsx';
+import { CalendarLoadingSpinner } from '@/presentation/components/modals/CalendarLoadingSpinner.jsx';
 
 /**
  * @name CalendarApp
@@ -14,6 +15,7 @@ export const CalendarApp = ({ config = {}, events = [] }) => {
   return (
     <CalendarProvider initialConfig={config} initialEvents={events}>
       <CalendarContent />
+      <CalendarLoadingSpinner />
     </CalendarProvider>
   );
 };

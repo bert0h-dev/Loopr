@@ -1,5 +1,5 @@
 import { h, createContext } from 'preact';
-import { useContext, useReducer, useMemo } from 'preact/hooks';
+import { useContext, useReducer, useMemo, useEffect } from 'preact/hooks';
 import { useDateFnsLocaleController } from '@/hooks/useDateFnsLocaleController.js';
 import { useCalendarReducer } from '@/hooks/useCalendarReducer.js';
 import { useCalendarController } from '@/hooks/useCalendarController.js';
@@ -49,6 +49,106 @@ export const CalendarProvider = ({
   // Crear acciones categorizadas usando el dispatch y el controlador de fechas
   const actionsBase = createCategorizedActions(dispatch, dateController, state);
 
+  // Crear acciones de navegación con loading automático
+  const navigationWithLoading = useMemo(() => {
+    const createNavigationAction = (originalAction, actionName) => {
+      return (...args) => {
+        // Activar loading antes de la acción
+        actionsBase.ui.setLoading(true);
+
+        // Ejecutar la acción original
+        const result = originalAction(...args);
+
+        // El loading se desactivará automáticamente con los eventos del controller
+        return result;
+      };
+    };
+
+    return {
+      ...actionsBase.navigation,
+      goToToday: createNavigationAction(
+        actionsBase.navigation.goToToday,
+        'goToToday'
+      ),
+      nextMonth: createNavigationAction(
+        actionsBase.navigation.nextMonth,
+        'nextMonth'
+      ),
+      prevMonth: createNavigationAction(
+        actionsBase.navigation.prevMonth,
+        'prevMonth'
+      ),
+      nextYear: createNavigationAction(
+        actionsBase.navigation.nextYear,
+        'nextYear'
+      ),
+      prevYear: createNavigationAction(
+        actionsBase.navigation.prevYear,
+        'prevYear'
+      ),
+      nextWeek: createNavigationAction(
+        actionsBase.navigation.nextWeek,
+        'nextWeek'
+      ),
+      prevWeek: createNavigationAction(
+        actionsBase.navigation.prevWeek,
+        'prevWeek'
+      ),
+      nextDay: createNavigationAction(
+        actionsBase.navigation.nextDay,
+        'nextDay'
+      ),
+      prevDay: createNavigationAction(
+        actionsBase.navigation.prevDay,
+        'prevDay'
+      ),
+      setDate: createNavigationAction(
+        actionsBase.navigation.setDate,
+        'setDate'
+      ),
+      gotoDate: createNavigationAction(
+        actionsBase.navigation.gotoDate,
+        'gotoDate'
+      ),
+      incrementDate: createNavigationAction(
+        actionsBase.navigation.incrementDate,
+        'incrementDate'
+      ),
+    };
+  }, [actionsBase.navigation, dispatch]);
+
+  // Suscribirse a eventos del controller para desactivar loading
+  useEffect(() => {
+    const unsubscribeEvents = [];
+
+    // Lista de eventos que deben desactivar el loading
+    const navigationEvents = [
+      'nextMonth',
+      'prevMonth',
+      'nextYear',
+      'prevYear',
+      'goToToday',
+      'gotoDate',
+      'incrementDate',
+      'dateSet',
+    ];
+
+    navigationEvents.forEach(eventType => {
+      const unsubscribe = dateController.on(eventType, () => {
+        // Desactivar loading después de completar la navegación
+        setTimeout(() => {
+          actionsBase.ui.setLoading(false);
+        }, 1000); // Pequeño delay para mostrar el spinner
+      });
+      unsubscribeEvents.push(unsubscribe);
+    });
+
+    // Cleanup
+    return () => {
+      unsubscribeEvents.forEach(unsub => unsub());
+    };
+  }, [dateController, dispatch]);
+
   // Valor del contexto optimizado con memoización
   const contextValue = useMemo(
     () => ({
@@ -61,9 +161,9 @@ export const CalendarProvider = ({
       // Controlador de fechas
       dateController,
 
-      // Acciones categorizadas
+      // Acciones categorizadas (navigation con loading automático)
       configActions: actionsBase.config,
-      navigation: actionsBase.navigation,
+      navigation: navigationWithLoading,
       view: actionsBase.view,
       events: actionsBase.events,
       ui: actionsBase.ui,
@@ -117,7 +217,14 @@ export const CalendarProvider = ({
         isLoading: () => !!state.ui?.loading,
       },
     }),
-    [state, currentDate, dateController, actionsBase, dateFnsLocale]
+    [
+      state,
+      currentDate,
+      dateController,
+      actionsBase,
+      navigationWithLoading,
+      dateFnsLocale,
+    ]
   );
 
   return (
